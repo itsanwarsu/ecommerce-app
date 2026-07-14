@@ -3,13 +3,13 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Success from "./pages/Success";
-import Profile from "./pages/Profile";
+import Profile from "./pages/Profile/Profile";
 import Transaction from "./pages/Transaction";
 import Chat from "./pages/Chat";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 import ProductDetail from "./pages/ProductDetail";
-import MyOrders from "./pages/MyOrders";
+import MyOrders from "./pages/Profile/MyOrders";
 
 
 // Perbaikan: Gunakan PascalCase untuk folder/file layout jika memungkinkan

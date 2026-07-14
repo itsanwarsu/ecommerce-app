@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineEnvelope, HiOutlineLockClosed } from "react-icons/hi2";
 import { useState } from "react";
+import useCartStore from "../../store/cartStore";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,8 +19,8 @@ function handleLogin(e) {
   );
 
   if (user) {
-    localStorage.setItem("isLogin", "true");
     localStorage.setItem("currentUser", JSON.stringify(user));
+    useCartStore.getState().loadUserData();
     navigate("/");
   } else {
     alert("Email atau Password salah");

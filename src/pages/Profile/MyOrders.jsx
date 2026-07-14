@@ -1,4 +1,4 @@
-import useCartStore from "../store/cartStore";
+import useCartStore from "../../store/cartStore";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 export default function MyOrders() {

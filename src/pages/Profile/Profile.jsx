@@ -10,6 +10,7 @@ import {
   HiOutlineArrowRightOnRectangle,
   HiOutlineChevronRight,
 } from "react-icons/hi2";
+import useCartStore from "../../store/cartStore";
 
 export default function Profile() {
 const navigate = useNavigate();
@@ -28,8 +29,7 @@ useEffect(() => {
 
 function handleLogout() {
   localStorage.removeItem("currentUser");
-  localStorage.removeItem("isLogin");
-
+useCartStore.getState().loadUserData();
   navigate("/login");
 }
 if (!user) {return null;}

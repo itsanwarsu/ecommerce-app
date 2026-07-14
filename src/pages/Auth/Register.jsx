@@ -32,12 +32,16 @@ const emailExists = users.some(
     alert("Email sudah terdaftar.");
     return;
 }
+
+const lastId =
+  users.length > 0 ? users[users.length - 1]._id : 0;
+
 const newUser = {
+  _id: lastId + 1,
   name,
   email,
   password,
 };
-
 
 users.push(newUser);
 
