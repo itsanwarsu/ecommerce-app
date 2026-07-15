@@ -37,7 +37,7 @@ if (!user) {return null;}
     <div className="min-h-screen bg-gray-100 pb-20 mt-[72px]">
 
       {/* Header */}
-      <div className="bg-green-600 text-white p-6 rounded-b-3xl">
+      <div className="bg-blue-600 text-white p-6 rounded-b-3xl">
         <div className="flex items-center gap-4">
           <HiOutlineUserCircle className="text-7xl" />
 

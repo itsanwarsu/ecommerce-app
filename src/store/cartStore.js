@@ -1,189 +1,136 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("currentUser"));
+const getUserId = () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    return user ? user._id.toString() : "guest"; // Amankan ke string
+  } catch (error) {
+    return "guest";
+  }
 };
 
-const getCartKey = () => {
-  const user = getCurrentUser();
-  return user ? `cart_${user._id}` : null;
-};
+const useCartStore = create(
+  persist(
+    (set, get) => ({
+      cart: [],
+      orders: [],
+      whishlist: [],
 
-const getOrderKey = () => {
-  const user = getCurrentUser();
-  return user ? `orders_${user._id}` : null;
-};
+      loadUserData: () => {},
 
-const loadCart = () => {
-  const key = getCartKey();
-  if (!key) return [];
-
-  return JSON.parse(localStorage.getItem(key)) || [];
-};
-
-const saveCart = (cart) => {
-  const key = getCartKey();
-  if (!key) return;
-
-  localStorage.setItem(key, JSON.stringify(cart));
-};
-
-const loadOrders = () => {
-  const key = getOrderKey();
-  if (!key) return [];
-
-  return JSON.parse(localStorage.getItem(key)) || [];
-};
-
-const saveOrders = (orders) => {
-  const key = getOrderKey();
-  if (!key) return;
-
-  localStorage.setItem(key, JSON.stringify(orders));
-};
-
-const useCartStore =
-  create((set) => ({
       // ==========================
-      // STATE
+      // CART ACTIONS (FIXED)
       // ==========================
-      cart: loadCart(),
-      orders: loadOrders(),
-  
-        loadUserData: () => {
-  set({
-    cart: loadCart(),
-    orders: loadOrders(),
-  });
+      addToCart: (product) => {
+        if (!product) return;
+        
+        const currentCart = get().cart;
+        const productId = (product._id || product.id).toString(); // Paksa ke String
+
+        // Cari apakah produk sudah ada di keranjang dengan aman
+        const existingProduct = currentCart.find((item) => {
+          const itemId = (item._id || item.id).toString();
+          return itemId === productId;
+        });
+
+        let newCart;
+        if (existingProduct) {
+          newCart = currentCart.map((item) => {
+            const itemId = (item._id || item.id).toString();
+            return itemId === productId
+              ? { ...item, quantity: (item.quantity || 1) + 1 }
+              : item;
+          });
+        } else {
+          newCart = [...currentCart, { ...product, quantity: 1 }];
+        }
+
+        set({ cart: newCart });
+      },
+
+      removeFromCart: (id) => {
+        if (!id) return;
+        const newCart = get().cart.filter(
+          (item) => (item._id || item.id).toString() !== id.toString()
+        );
+        set({ cart: newCart });
+      },
+
+      increaseQty: (id) => {
+        if (!id) return;
+        const newCart = get().cart.map((item) =>
+          (item._id || item.id).toString() === id.toString()
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
+        );
+        set({ cart: newCart });
+      },
+
+      decreaseQty: (id) => {
+        if (!id) return;
+        const currentCart = get().cart;
+        const targetItem = currentCart.find(
+          (item) => (item._id || item.id).toString() === id.toString()
+        );
+
+        if (!targetItem) return;
+
+        let newCart;
+        if ((targetItem.quantity || 1) <= 1) {
+          newCart = currentCart.filter(
+            (item) => (item._id || item.id).toString() !== id.toString()
+          );
+        } else {
+          newCart = currentCart.map((item) =>
+            (item._id || item.id).toString() === id.toString()
+              ? { ...item, quantity: targetItem.quantity - 1 }
+              : item
+          );
+        }
+
+        set({ cart: newCart });
+      },
+
+  addToWishlist: (product) => {
+  if (!product) return;
+
+  const currentWishlist = get().wishlist;
+  const productId = (product._id || product.id).toString();
+
+  const alreadyExists = currentWishlist.some(
+    (item) => (item._id || item.id).toString() === productId
+  );
+
+  if (alreadyExists) return; // hindari duplikat
+
+  set({ wishlist: [...currentWishlist, product] });
 },
-      // ==========================
-      // CART
-      // ==========================
- addToCart: (product) =>
-  set((state) => {
-    let newCart;
 
-    const existingProduct = state.cart.find(
-      (item) => item._id === product._id
-    );
-
-    if (existingProduct) {
-      newCart = state.cart.map((item) =>
-        item._id === product._id
-          ? {
-              ...item,
-              quantity: (item.quantity || 1) + 1,
-            }
-          : item
-      );
-    } else {
-      newCart = [
-        ...state.cart,
-        {
-          ...product,
-          quantity: 1,
-        },
-      ];
-    }
-
-    saveCart(newCart);
-
-    return {
-      cart: newCart,
-    };
-  }),
-
- removeFromCart: (id) =>
-  set((state) => {
-    const newCart = state.cart.filter(
-      (item) => item._id !== id
-    );
-
-    saveCart(newCart);
-
-    return {
-      cart: newCart,
-    };
-  }),
-
- increaseQty: (id) =>
-  set((state) => {
-    const newCart = state.cart.map((item) =>
-      item._id === id
-        ? {
-            ...item,
-            quantity: item.quantity + 1,
-          }
-        : item
-    );
-
-    saveCart(newCart);
-
-    return {
-      cart: newCart,
-    };
-  }),
-
-decreaseQty: (id) =>
-  set((state) => {
-    const targetItem = state.cart.find(
-      (item) => item._id === id
-    );
-
-    if (!targetItem) return {};
-
-    let newCart;
-
-    if (targetItem.quantity <= 1) {
-      newCart = state.cart.filter(
-        (item) => item._id !== id
-      );
-    } else {
-      newCart = state.cart.map((item) =>
-        item._id === id
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-            }
-          : item
-      );
-    }
-
-    saveCart(newCart);
-
-    return {
-      cart: newCart,
-    };
-  }),
-
-clearCart: () => {
-  saveCart([]);
-
-  set({
-    cart: [],
-  });
+removeFromWishlist: (id) => {
+  if (!id) return;
+  const newWishlist = get().wishlist.filter(
+    (item) => (item._id || item.id).toString() !== id.toString()
+  );
+  set({ wishlist: newWishlist });
 },
-      // ==========================
-      // ORDERS
-      // ==========================
-addOrder: (order) =>
-  set((state) => {
-    const newOrders = [...state.orders, order];
 
-    saveOrders(newOrders);
+     clearWishlist: () => set({ wishlist: [] }),
+     
+     clearCart: () => set({ cart: [] }),
 
-    return {
-      orders: newOrders,
-    };
-  }),
+      addOrder: (order) => {
+        set((state) => ({ orders: [...state.orders, order] }));
+      },
 
-clearOrders: () => {
-  saveOrders([]);
-
-  set({
-    orders: [],
-  });
-},  
-}));
+      clearOrders: () => set({ orders: [] }),
+    }),
+    {
+      name: `user_store_${getUserId()}`,
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
 export default useCartStore;
+

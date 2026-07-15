@@ -5,8 +5,6 @@ import {
   HiOutlineDevicePhoneMobile,
   HiOutlineComputerDesktop,
   HiOutlineCreditCard,
-  HiOutlineReceiptPercent,
-  HiOutlineShoppingBag,
   HiOutlineHome,
   HiOutlineTv,
   HiOutlineGift,
@@ -18,10 +16,6 @@ const features = [
     icon: HiOutlineCreditCard,
   },
   {
-    title: "Tagihan",
-    icon: HiOutlineReceiptPercent,
-  },
-  {
     title: "Laptop",
     icon: HiOutlineComputerDesktop,
   },
@@ -29,10 +23,7 @@ const features = [
     title: "Gadget",
     icon: HiOutlineDevicePhoneMobile,
   },
-  {
-    title: "Fashion",
-    icon: HiOutlineShoppingBag,
-  },
+
   {
     title: "Elektronik",
     icon: HiOutlineTv,
@@ -49,10 +40,10 @@ const features = [
 
 export default function FeatureSlider() {
   return (
-    <div className="px-4 py-4">
+    <div className="px-2 py-2 mt-1">
       <Swiper
         slidesPerView={4.2}
-        spaceBetween={15}
+        spaceBetween={10}
       >
         {features.map((item, index) => {
           const Icon = item.icon;
@@ -60,7 +51,7 @@ export default function FeatureSlider() {
           return (
             <SwiperSlide key={index}>
               <div className="flex flex-col items-center">
-                <div className="bg-blue-100 p-4 rounded-full">
+                <div className="bg-blue-100 p-3 rounded-full">
                   <Icon className="text-3xl text-blue-600" />
                 </div>
 

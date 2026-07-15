@@ -6,7 +6,7 @@ export default function MyOrders() {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center p-6">
         <HiOutlineShoppingBag className="text-7xl text-gray-500 mb-4" />
 
         <h1 className="text-3xl font-bold mb-2">
@@ -21,7 +21,7 @@ export default function MyOrders() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-5">
+    <div className="min-h-screen bg-white text-black p-5">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">
           Pesanan Saya
@@ -30,7 +30,7 @@ export default function MyOrders() {
         {orders.map((order, index) => (
           <div
             key={index}
-            className="bg-slate-800 rounded-2xl p-5 mb-6 shadow-lg"
+            className="bg-white rounded-2xl p-5 mb-6 shadow-lg"
           >
             {/* Header */}
             <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">

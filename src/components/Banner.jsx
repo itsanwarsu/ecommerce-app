@@ -28,7 +28,7 @@ export default function Banner() {
             <img
               src={banner}
               alt={`Banner ${index + 1}`}
-              className="w-full h-48 object-cover rounded-xl"
+              className="w-full h-[180px] object-cover rounded-xl"
             />
           </SwiperSlide>
         ))}

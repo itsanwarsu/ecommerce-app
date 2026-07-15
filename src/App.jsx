@@ -4,7 +4,6 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Success from "./pages/Success";
 import Profile from "./pages/Profile/Profile";
-import Transaction from "./pages/Transaction";
 import Chat from "./pages/Chat";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
@@ -34,7 +33,6 @@ export default function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/success" element={<Success />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/transaction" element={<Transaction />} />
         <Route path="/orders" element={<MyOrders />} />
       </Route>
 
