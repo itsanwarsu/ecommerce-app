@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import useCartStore from "../store/cartStore"
+import useCartStore from "../../store/cartStore"
 
 export default function Checkout() {
   const navigate = useNavigate()

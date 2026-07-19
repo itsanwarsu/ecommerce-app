@@ -8,9 +8,9 @@ const ProductCard = ({ product }) => {
         
         {/* Gambar Produk */}
         <img
-          src={product.image}
+          src={product.images[0]}
           alt={product.name}
-          className="w-full h-40 object-cover"
+          className="w-full h-40 object-contain"
         />
 
         {/* Detail Produk */}

@@ -54,14 +54,13 @@ export default function FooterNavbar({ product }) {
             disabled={!product}
             className="flex-1 flex items-center justify-center gap-2 bg-orange-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 active:bg-orange-700 transition-colors"
           >
-            <HiOutlineShoppingCart className="text-xl" />
             Tambah Keranjang
           </button>
 
           <button
             onClick={handleBuyNow}
             disabled={!product}
-            className="flex-1 bg-red-600 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 active:bg-red-800 transition-colors"
+            className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 active:bg-red-800 transition-colors"
           >
             Beli Sekarang
           </button>

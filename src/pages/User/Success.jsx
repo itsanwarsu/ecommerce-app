@@ -3,7 +3,7 @@ import {
   HiOutlineCheckCircle,
   HiOutlineShoppingBag,
 } from "react-icons/hi2";
-import useCartStore from "../store/cartStore";
+import useCartStore from "../../store/cartStore";
 
 export default function Success() {
   const navigate = useNavigate();

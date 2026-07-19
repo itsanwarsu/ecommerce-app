@@ -20,13 +20,20 @@ function handleLogin(e) {
 
   if (user) {
     localStorage.setItem("currentUser", JSON.stringify(user));
+
     useCartStore.getState().loadUserData();
-    navigate("/");
+
+    if (user.role === "superadmin") {
+      navigate("/superadmin");
+    } else if (user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
   } else {
     alert("Email atau Password salah");
   }
 }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
 

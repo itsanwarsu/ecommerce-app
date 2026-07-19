@@ -1,22 +1,21 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
-import Success from "./pages/Success";
-import Profile from "./pages/Profile/Profile";
-import Chat from "./pages/Chat";
+import Home from "./pages/User/Home";
+import Cart from "./pages/User/Cart";
+import Checkout from "./pages/User/Checkout";
+import Success from "./pages/User/Success";
+import Profile from "./pages/User/Profile";
+import Chat from "./pages/User/Chat";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import ProductDetail from "./pages/ProductDetail";
-import MyOrders from "./pages/Profile/MyOrders";
-
+import ProductDetail from "./pages/User/ProductDetail";
+import MyOrders from "./pages/User/MyOrders";
+import SuperAdmin from "./pages/SuperAdmin/SuperAdmin";
+import SuperAdminRoute from "./components/protected/SuperAdminRoute";
 
 // Perbaikan: Gunakan PascalCase untuk folder/file layout jika memungkinkan
 import MainLayout from "./layouts/MainLayout"; 
 import AuthLayout from "./layouts/AuthLayout";
-
-// Opsional: Jika Anda nanti membuat komponen pembatas akses login
-// import ProtectedRoute from "./components/ProtectedRoute"; 
+import SuperAdminLayout from "./layouts/SuperAdminLayout";
 
 export default function App() {
   return (
@@ -27,7 +26,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
-        
+      
         {/* Rute Semi-Publik / Privat (Bisa ditambahkan ProtectedRoute nanti) */}
         <Route path="/chat" element={<Chat />} />
         <Route path="/checkout" element={<Checkout />} />
@@ -35,6 +34,14 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<MyOrders />} />
       </Route>
+
+<Route element={<SuperAdminLayout />}>
+<Route  path="/superadmin" element={
+              <SuperAdminRoute>
+              <SuperAdmin />
+              </SuperAdminRoute>
+              } />
+</Route>
 
       {/* 2. LAYOUT AUTENTIKASI (Login & Register) */}
       <Route element={<AuthLayout />}>

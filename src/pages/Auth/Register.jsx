@@ -41,6 +41,7 @@ const newUser = {
   name,
   email,
   password,
+  role:"user"
 };
 
 users.push(newUser);
