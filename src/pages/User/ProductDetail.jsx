@@ -5,6 +5,8 @@ import LocalReviews from "../../components/LocalReviews";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import useRecentStore from "../../store/recentStore";
+import useWishlistStore from "../../store/wishlistStore";
+import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -12,14 +14,26 @@ import "swiper/css/pagination";
 export default function ProductDetail() {
   const { id } = useParams();
 
-  // Safely extract context untuk mencegah crash jika context null
+  // Safely extract context
   const context = useOutletContext() || {};
   const setCurrentProduct = context.setCurrentProduct;
 
   const addRecentProduct = useRecentStore((state) => state.addRecentProduct);
 
+  const {
+    wishlist,
+    fetchWishlist,
+    addToWishlist,
+    removeFromWishlist,
+  } = useWishlistStore();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Ambil wishlist saat halaman dibuka
+  useEffect(() => {
+    fetchWishlist();
+  }, [fetchWishlist]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,17 +42,14 @@ export default function ProductDetail() {
 
         const res = await api.get(`/products/${id}`);
 
-        // Mendukung response { product: {...} } maupun langsung {...}
         const productData = res.data.product || res.data;
 
         setProduct(productData);
 
-        // Set product aktif untuk layout
         if (typeof setCurrentProduct === "function") {
           setCurrentProduct(productData);
         }
 
-        // Ambil userId dari localStorage
         let userId = "guest";
         const currentUserRaw = localStorage.getItem("currentUser");
 
@@ -50,12 +61,11 @@ export default function ProductDetail() {
               currentUser._id ||
               currentUser.username ||
               "guest";
-          } catch (err) {
+          } catch {
             userId = "guest";
           }
         }
 
-        // Simpan ke recent product
         addRecentProduct(userId, productData);
       } catch (err) {
         console.error("Gagal mengambil detail produk:", err);
@@ -92,7 +102,6 @@ export default function ProductDetail() {
     );
   }
 
-  // Mendukung Cloudinary maupun string URL biasa
   const imageList =
     Array.isArray(product.images) && product.images.length > 0
       ? product.images.map((img) => img.url || img)
@@ -101,6 +110,22 @@ export default function ProductDetail() {
             product.image ||
             "https://via.placeholder.com/400",
         ];
+
+  const isWishlisted = wishlist.some(
+    (item) => item._id === product._id
+  );
+
+  const handleWishlist = async () => {
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist(product._id);
+      } else {
+        await addToWishlist(product._id);
+      }
+    } catch (err) {
+      console.error("Wishlist error:", err);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-3 mt-16 pb-28">
@@ -123,13 +148,26 @@ export default function ProductDetail() {
         ))}
       </Swiper>
 
-      {/* Harga */}
-      <h2 className="text-xl font-bold text-blue-600 mt-4 ml-2">
-        Rp{" "}
-        <span className="text-2xl">
-          {(product.price || 0).toLocaleString("id-ID")}
-        </span>
-      </h2>
+      {/* Harga + Wishlist */}
+      <div className="flex items-center justify-between mt-4">
+        <h2 className="text-xl font-bold text-blue-600 ml-2">
+          Rp{" "}
+          <span className="text-2xl">
+            {(product.price || 0).toLocaleString("id-ID")}
+          </span>
+        </h2>
+
+        <button
+          onClick={handleWishlist}
+          className="mr-2 w-12 h-12 rounded-full bg-white border border-gray-200 shadow flex items-center justify-center hover:scale-110 transition"
+        >
+          {isWishlisted ? (
+            <HiHeart className="text-red-500 text-3xl" />
+          ) : (
+            <HiOutlineHeart className="text-gray-500 text-3xl" />
+          )}
+        </button>
+      </div>
 
       {/* Nama Produk */}
       <h1 className="text-2xl font-bold mt-1 ml-2 text-gray-900">

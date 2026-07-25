@@ -6,6 +6,13 @@ import "./index.css"
 import initAdmin from "./config/initAdmin.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+
+if (import.meta.env.DEV) {
+  import("eruda").then((eruda) => {
+    eruda.default.init();
+  });
+}
 
 initAdmin();
 

@@ -12,6 +12,7 @@ import MyOrders from "./pages/User/MyOrders";
 import SuperAdmin from "./pages/SuperAdmin/SuperAdmin";
 import SuperAdminRoute from "./components/protected/SuperAdminRoute";
 import AddProduct from "./pages/Admin/AddProduct";
+import Wishlist from "./pages/User/Wishlist";
 
 // Perbaikan: Gunakan PascalCase untuk folder/file layout jika memungkinkan
 import MainLayout from "./layouts/MainLayout"; 
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       
         {/* Rute Semi-Publik / Privat (Bisa ditambahkan ProtectedRoute nanti) */}
         <Route path="/chat" element={<Chat />} />
