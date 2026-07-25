@@ -3,27 +3,28 @@ import {
   HiOutlineCheckCircle,
   HiOutlineShoppingBag,
 } from "react-icons/hi2";
-import useCartStore from "../../store/cartStore";
+import useOrderStore from "../../store/orderStore";
 
 export default function Success() {
   const navigate = useNavigate();
 
-  const orders = useCartStore((state) => state.orders);
-
-  const order =
-    orders.length > 0 ? orders[orders.length - 1] : null;
+  const order = useOrderStore((state) => state.currentOrder);
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-3">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
+          <h1 className="text-3xl font-bold text-gray-800 mb-3">
             Belum Ada Pesanan
           </h1>
 
+          <p className="text-gray-500 mb-6">
+            Kamu belum melakukan checkout.
+          </p>
+
           <button
             onClick={() => navigate("/")}
-            className="mt-5 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg font-semibold"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
           >
             Kembali Belanja
           </button>
@@ -33,49 +34,76 @@ export default function Success() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-6">
-      <div className="bg-slate-800 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
 
-        <HiOutlineCheckCircle className="text-7xl text-green-400 mx-auto mb-4" />
+        <div className="flex justify-center">
+          <HiOutlineCheckCircle className="text-7xl text-green-500" />
+        </div>
 
-        <h1 className="text-3xl font-bold text-green-400 mb-2">
-          Pembayaran Berhasil 🎉
+        <h1 className="text-3xl font-bold text-center text-green-600 mt-4">
+          Pesanan Berhasil
         </h1>
 
-        <p className="text-gray-300 mb-6">
+        <p className="text-center text-gray-500 mt-2 mb-8">
           Terima kasih telah berbelanja.
         </p>
 
-        <div className="bg-slate-700 rounded-xl p-4 text-left space-y-2">
-          <p>
-            <span className="font-semibold">Nama:</span> {order.name}
-          </p>
+        <div className="space-y-3 border rounded-xl p-5 bg-gray-50">
 
-          <p>
-            <span className="font-semibold">Alamat:</span> {order.address}
-          </p>
+          <div className="flex justify-between">
+            <span className="font-medium">Nomor Pesanan</span>
+            <span className="font-semibold">
+              #{order._id?.slice(-8)}
+            </span>
+          </div>
 
-          <p>
-            <span className="font-semibold">Total:</span>{" "}
-            <span className="text-green-400 font-bold">
+          <div className="flex justify-between">
+            <span className="font-medium">Nama</span>
+            <span>{order.customerName}</span>
+          </div>
+
+          <div className="flex justify-between gap-4">
+            <span className="font-medium">Alamat</span>
+
+            <span className="text-right">
+              {order.address}
+            </span>
+          </div>
+
+          <div className="flex justify-between">
+            <span className="font-medium">Status</span>
+
+            <span className="capitalize text-blue-600 font-semibold">
+              {order.status}
+            </span>
+          </div>
+
+          <div className="flex justify-between">
+            <span className="font-medium">Tanggal</span>
+
+            <span>
+              {new Date(order.createdAt).toLocaleString("id-ID")}
+            </span>
+          </div>
+
+          <hr />
+
+          <div className="flex justify-between text-lg">
+            <span className="font-bold">
+              Total
+            </span>
+
+            <span className="font-bold text-green-600">
               Rp {order.total.toLocaleString("id-ID")}
             </span>
-          </p>
+          </div>
 
-          <p>
-            <span className="font-semibold">Status:</span>{" "}
-            {order.status || "Berhasil"}
-          </p>
-
-          <p>
-            <span className="font-semibold">Tanggal:</span>{" "}
-            {order.date || "-"}
-          </p>
         </div>
 
         <button
           onClick={() => navigate("/orders")}
-          className="mt-6 w-full bg-green-500 hover:bg-green-600 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
+          className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
         >
           <HiOutlineShoppingBag className="text-xl" />
           Lihat Pesanan Saya
@@ -83,7 +111,7 @@ export default function Success() {
 
         <button
           onClick={() => navigate("/")}
-          className="mt-3 w-full border border-gray-600 hover:bg-slate-700 py-3 rounded-xl"
+          className="w-full mt-3 border border-gray-300 hover:bg-gray-100 py-3 rounded-xl font-semibold"
         >
           Lanjut Belanja
         </button>

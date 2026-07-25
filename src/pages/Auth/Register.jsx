@@ -5,6 +5,7 @@ import {
   HiOutlineEnvelope,
   HiOutlineLockClosed,
 } from "react-icons/hi2";
+import api from "../../api/axios";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -13,44 +14,33 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleRegister(e) {
-    e.preventDefault();
 
-    if (!name || !email || !password) {
-      alert("Semua data harus diisi!");
-      return;
-    }
+const handleRegister = async (e) => {
+  e.preventDefault();
 
-    // Simpan ke localStorage (sementara)
-const users = JSON.parse(localStorage.getItem("users")) || [];
-
-const emailExists = users.some(
-    (user) => user.email === email
-  );
-
-  if (emailExists) {
-    alert("Email sudah terdaftar.");
+  if (!name || !email || !password) {
+    alert("Semua data harus diisi!");
     return;
-}
+  }
 
-const lastId =
-  users.length > 0 ? users[users.length - 1]._id : 0;
+  try {
+      const response = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      }
+    );
 
-const newUser = {
-  _id: lastId + 1,
-  name,
-  email,
-  password,
-  role:"user"
-};
-
-users.push(newUser);
-
-localStorage.setItem("users", JSON.stringify(users));
-    alert("Pendaftaran berhasil!");
-
+    alert(response.data.message);
     navigate("/login");
- } 
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      error.message ||
+      "Pendaftaran gagal."
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

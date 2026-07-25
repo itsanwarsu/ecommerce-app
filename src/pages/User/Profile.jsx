@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
+  HiShieldCheck,
   HiOutlineChatBubbleOvalLeft,
   HiOutlineBell,
   HiOutlineShoppingCart,
@@ -13,30 +14,49 @@ import {
   HiOutlineArrowRightOnRectangle,
   HiOutlineChevronRight,
 } from "react-icons/hi2";
+
+import api from "../../api/axios";
 import useCartStore from "../../store/cartStore";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+  // Ambil data profil dari backend
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get("/auth/profile");
+        setUser(response.data.user);
+      } catch (error) {
+        // Token tidak valid atau sudah habis
+        localStorage.removeItem("token");
+        localStorage.removeItem("currentUser");
 
-    if (!currentUser) {
-      navigate("/login");
-      return;
-    }
+        navigate("/login");
+      }
+    };
 
-    setUser(currentUser);
+    fetchProfile();
   }, [navigate]);
 
+  // Logout
   function handleLogout() {
+    localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
-    useCartStore.getState().loadUserData();
+
+useCartStore.getState().clearCart();
     navigate("/login");
   }
 
-  if (!user) return null;
+  // Loading saat mengambil data profil
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Memuat profil...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 pb-20 ">
@@ -73,6 +93,14 @@ export default function Profile() {
 
       {/* Menu */}
       <div className="mt-5 bg-white rounded-xl mx-4 shadow">
+
+{user?.role === "superadmin" && (
+  <MenuItem
+  onClick={() => navigate("/superadmin")}
+  icon={<HiShieldCheck />}
+  title="Dashboard Super Admin"
+  />
+)}
         <MenuItem
           onClick={() => navigate("/orders")}
           icon={<HiOutlineShoppingBag />}

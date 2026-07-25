@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineEnvelope, HiOutlineLockClosed } from "react-icons/hi2";
 import { useState } from "react";
 import useCartStore from "../../store/cartStore";
+import api from "../../api/axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -9,31 +10,47 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-function handleLogin(e) {
+const handleLogin = async (e) => {
   e.preventDefault();
 
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+  if (!email || !password) {
+    alert("Email dan Password harus diisi!");
+    return;
+  }
 
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
+  try {
+    const response = await api.post("/auth/login", {
+      email,
+      password,
+    });
 
-  if (user) {
-    localStorage.setItem("currentUser", JSON.stringify(user));
+    localStorage.setItem("token", response.data.token);
 
-    useCartStore.getState().loadUserData();
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(response.data.user)
+    );
 
-    if (user.role === "superadmin") {
+await useCartStore.getState().loadCart();
+
+    const role = response.data.user.role;
+
+    if (role === "superadmin") {
       navigate("/superadmin");
-    } else if (user.role === "admin") {
+    } else if (role === "admin") {
       navigate("/admin");
     } else {
       navigate("/");
     }
-  } else {
-    alert("Email atau Password salah");
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      error.message ||
+      "Login gagal."
+    );
   }
-}
+};
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
 

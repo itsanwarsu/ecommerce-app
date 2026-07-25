@@ -4,20 +4,35 @@ import { persist } from "zustand/middleware";
 const useRecentStore = create(
   persist(
     (set, get) => ({
-      // Kita simpan dalam bentuk objek: { "userId_1": [produk, produk], "guest": [produk] }
+      // Objek penyimpan: { "userId_1": [produk], "guest": [produk] }
       recentByUsers: {},
 
-      // Fungsi untuk menambahkan produk terakhir dilihat untuk user tertentu
+      // Tambah produk terakhir dilihat
       addRecentProduct: (userId, product) => {
-        // Jika tidak ada userId (user belum login), gunakan fallback 'guest'
+        if (!product) return;
+
         const key = userId || "guest";
         const currentRecents = get().recentByUsers[key] || [];
 
-        // Hapus duplikasi jika produk ini sebelumnya sudah pernah dilihat
-        const filtered = currentRecents.filter((item) => item._id !== product._id);
+        // Dapatkan ID produk yang konsisten (_id atau id)
+        const productId = product._id || product.id;
 
-        // Masukkan produk baru di paling depan (maksimal simpan 4 produk saja)
-        const updated = [product, ...filtered].slice(0, 4);
+        // Hapus duplikasi jika produk sudah ada di riwayat
+        const filtered = currentRecents.filter(
+          (item) => (item._id || item.id) !== productId
+        );
+
+        // Hanya simpan properti ringkas yang dibutuhkan UI ProductCard
+        const cleanProduct = {
+          _id: productId,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category,
+        };
+
+        // Masukkan produk ke urutan pertama, maksimal 4 produk
+        const updated = [cleanProduct, ...filtered].slice(0, 4);
 
         set((state) => ({
           recentByUsers: {
@@ -27,13 +42,13 @@ const useRecentStore = create(
         }));
       },
 
-      // Fungsi helper untuk mengambil produk berdasarkan userId aktif
+      // Ambil riwayat produk berdasarkan userId
       getRecentProducts: (userId) => {
         const key = userId || "guest";
         return get().recentByUsers[key] || [];
       },
 
-      // Opsional: Hapus riwayat jika user logout/ingin bersih-bersih
+      // Hapus riwayat untuk userId tertentu
       clearRecentProducts: (userId) => {
         const key = userId || "guest";
         set((state) => ({

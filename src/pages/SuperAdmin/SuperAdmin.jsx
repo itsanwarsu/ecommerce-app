@@ -34,7 +34,7 @@ export default function SuperAdmin() {
     {
       title: "Produk",
       icon: <HiOutlineCube />,
-      path: "/superadmin/products",
+      path: "/admin/addproduct",
     },
     {
       title: "Pesanan",

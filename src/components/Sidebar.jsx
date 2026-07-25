@@ -1,0 +1,120 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  HiOutlineBars3,
+  HiOutlineXMark,
+  HiOutlineHeart,
+  HiOutlineCog6Tooth,
+  HiOutlineUserCircle,
+} from "react-icons/hi2";
+
+export default function Sidebar() {
+  const [open, setOpen] = useState(false);
+
+  // Ambil data user dengan aman
+  let currentUser = null;
+
+  try {
+    currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+  } catch (err) {
+    currentUser = null;
+  }
+
+  // Mencegah body ikut scroll saat sidebar terbuka
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
+
+  return (
+    <>
+      {/* Tombol Hamburger */}
+      <button
+        onClick={() => setOpen(true)}
+        className="p-2 rounded-lg hover:bg-gray-100 transition"
+      >
+        <HiOutlineBars3 className="text-3xl text-gray-700" />
+      </button>
+
+      {/* Overlay */}
+      <div
+        onClick={() => setOpen(false)}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-[1px] z-40 transition-opacity duration-300 ${
+          open ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+      />
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="font-bold text-lg">Menu</h2>
+
+          <button
+            onClick={() => setOpen(false)}
+            className="p-1 rounded-lg hover:bg-gray-100 transition"
+          >
+            <HiOutlineXMark className="text-3xl text-gray-700" />
+          </button>
+        </div>
+
+        {/* Profile */}
+        <div className="p-5 border-b">
+ <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              {currentUser?.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <HiOutlineUserCircle className="text-5xl text-gray-500" />
+              )}
+            </div>
+
+            <div>
+<Link to="/profile">            
+  <h3 className="font-semibold text-gray-800">
+                {currentUser?.name || "Guest"}
+              </h3>
+
+              <p className="text-sm text-gray-500">
+                {currentUser?.email || "Silakan login"}
+              </p>
+</Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Menu */}
+        <nav className="p-3 space-y-1">
+          <Link
+            to="/wishlist"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            <HiOutlineHeart className="text-2xl text-pink-500" />
+            <span className="font-medium">Wishlist</span>
+          </Link>
+
+          <Link
+            to="/settings"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            <HiOutlineCog6Tooth className="text-2xl text-gray-600" />
+            <span className="font-medium">Pengaturan</span>
+          </Link>
+        </nav>
+      </aside>
+    </>
+  );
+}

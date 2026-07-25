@@ -1,102 +1,202 @@
-import { useNavigate } from "react-router-dom"
-import useCartStore from "../../store/cartStore"
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import useCartStore from "../../store/cartStore";
 
 export default function Cart() {
-  const navigate = useNavigate()
-  
-  // Mengambil state dan fungsi yang dibutuhkan dari Zustand
-  const cart = useCartStore((state) => state.cart)
-  const clearCart = useCartStore((state) => state.clearCart)
-  const increaseQty = useCartStore((state) => state.increaseQty)
-  const decreaseQty = useCartStore((state) => state.decreaseQty)
-  const removeFromCart = useCartStore((state) => state.removeFromCart)
+  const navigate = useNavigate();
 
-  // Perbaikan 1: Hitung total dengan mengalikan harga dengan kuantitas
-  const total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0)
+  const {
+    cart,
+    loading,
+    updating,
+    loadCart,
+    clearCart,
+    increaseQty,
+    decreaseQty,
+    removeFromCart,
+  } = useCartStore();
+
+  useEffect(() => {
+    loadCart().catch((err) => {
+      console.error("Gagal memuat keranjang:", err);
+    });
+  }, [loadCart]);
+
+  const getItemDetails = (item) => {
+    const product =
+      item.product && typeof item.product === "object"
+        ? item.product
+        : {};
+
+    const image =
+      product.image?.url ||
+      product.image?.secure_url ||
+      product.image ||
+      (Array.isArray(product.images)
+        ? product.images[0]?.url ||
+          product.images[0]?.secure_url ||
+          product.images[0]
+        : null) ||
+      "https://via.placeholder.com/300x300?text=No+Image";
+
+    return {
+      id: product._id || item._id,
+      name: product.name ?? "Produk Tanpa Nama",
+      price: Number(product.price ?? 0),
+      quantity: Number(item.quantity ?? 1),
+      image,
+    };
+  };
+
+  const total = useMemo(() => {
+    return cart.reduce((sum, rawItem) => {
+      const item = getItemDetails(rawItem);
+      return sum + item.price * item.quantity;
+    }, 0);
+  }, [cart]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-lg font-medium text-gray-600">
+          Memuat keranjang...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
-      <h1 className="text-3xl font-bold mb-6">Cart 🛒</h1>
+    <div className="min-h-screen bg-gray-100 pt-24 pb-10 px-4">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Keranjang Belanja 🛒
+        </h1>
 
-      {/* Kondisi jika keranjang kosong */}
-      {cart.length === 0 ? (
-        <div className="text-center py-10 bg-white/5 rounded-lg">
-          <p className="text-gray-400 mb-4">Keranjang belanja Anda masih kosong.</p>
-          <button 
-            onClick={() => navigate("/")} 
-            className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded font-medium transition-colors"
-          >
-            Mulai Belanja
-          </button>
-        </div>
-      ) : (
-        <>
-          {/* Daftar Item di Keranjang */}
-          <div className="space-y-3">
-            {cart.map((item) => (
-              <div key={item._id} className="bg-white/10 p-4 rounded flex justify-between items-center gap-4">
-                <div>
-                  <h3 className="font-semibold text-lg">{item.name}</h3>
-                  <p className="text-sm text-gray-400">
-                    Rp {item.price.toLocaleString("id-ID")} x {item.quantity || 1}
-                  </p>
-                </div>
+        {cart.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow p-10 text-center">
+            <p className="text-gray-500 text-lg mb-6">
+              Keranjang belanja Anda masih kosong.
+            </p>
 
-                {/* Kontrol Kuantitas */}
-                <div className="flex items-center gap-3">
-                  <button 
-                    onClick={() => decreaseQty(item._id)}
-                    className="bg-white/10 hover:bg-white/20 w-8 h-8 rounded flex items-center justify-center font-bold"
+            <button
+              onClick={() => navigate("/")}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
+            >
+              Mulai Belanja
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-4">
+              {cart.map((rawItem) => {
+                const item = getItemDetails(rawItem);
+
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-2xl shadow border border-gray-200 p-4 flex items-center justify-between"
                   >
-                    -
-                  </button>
-                  <span className="font-medium">{item.quantity || 1}</span>
-                  <button 
-                    onClick={() => increaseQty(item._id)}
-                    className="bg-white/10 hover:bg-white/20 w-8 h-8 rounded flex items-center justify-center font-bold"
-                  >
-                    +
-                  </button>
-                  <button 
-                    onClick={() => removeFromCart(item._id)}
-                    className="ml-2 text-red-400 hover:text-red-500 text-sm font-medium"
-                  >
-                    Hapus
-                  </button>
-                </div>
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-24 h-24 rounded-xl object-cover border"
+                      />
+
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-800">
+                          {item.name}
+                        </h3>
+
+                        <p className="text-blue-600 font-semibold mt-2">
+                          Rp {item.price.toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <button
+             disabled={updating}
+             onClick={async () => {
+                            try {
+                              await decreaseQty(item.id);
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }}
+                          className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 font-bold"
+                        >
+                          −
+                        </button>
+
+                        <span className="w-8 text-center font-semibold text-gray-800">
+                          {item.quantity}
+                        </span>
+
+                        <button
+                       disabled={updating}
+                        onClick={async () => {
+                            try {
+                              await increaseQty(item.id);
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }}
+                          className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={async () => {
+                          try {
+                            await removeFromCart(item.id);
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 bg-white rounded-2xl shadow border border-gray-200 p-6">
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-xl font-semibold text-gray-700">
+                  Total Belanja
+                </span>
+
+                <span className="text-3xl font-bold text-blue-600">
+                  Rp {total.toLocaleString("id-ID")}
+                </span>
               </div>
-            ))}
-          </div>
 
-          {/* Bagian Total Harga dan Aksi */}
-          <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xl">Total:</span>
-              {/* Perbaikan 2: Format titik ditambahkan di sini */}
-              <span className="text-2xl font-bold text-blue-400">
-                Rp {total.toLocaleString("id-ID")}
-              </span>
-            </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => navigate("/checkout")}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
+                >
+                  Checkout
+                </button>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => navigate("/checkout")}
-                className="w-full bg-blue-500 hover:bg-blue-600 py-3 rounded-lg font-semibold transition-colors"
-              >
-                Lanjut ke Checkout
-              </button>
-              
-              <button
-                onClick={clearCart}
-                className="w-full sm:w-auto bg-red-500/20 hover:bg-red-500/40 text-red-400 px-4 py-3 rounded-lg font-medium transition-colors"
-              >
-                Kosongkan Keranjang
-              </button>
+                <button
+                  onClick={clearCart}
+                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-semibold transition"
+                >
+                  Kosongkan Keranjang
+                </button>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
-  )
+  );
 }
-

@@ -11,6 +11,7 @@ import ProductDetail from "./pages/User/ProductDetail";
 import MyOrders from "./pages/User/MyOrders";
 import SuperAdmin from "./pages/SuperAdmin/SuperAdmin";
 import SuperAdminRoute from "./components/protected/SuperAdminRoute";
+import AddProduct from "./pages/Admin/AddProduct";
 
 // Perbaikan: Gunakan PascalCase untuk folder/file layout jika memungkinkan
 import MainLayout from "./layouts/MainLayout"; 
@@ -41,6 +42,7 @@ export default function App() {
               <SuperAdmin />
               </SuperAdminRoute>
               } />
+<Route path="/admin/addproduct" element={<AddProduct />} />
 </Route>
 
       {/* 2. LAYOUT AUTENTIKASI (Login & Register) */}
