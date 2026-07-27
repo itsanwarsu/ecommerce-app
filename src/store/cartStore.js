@@ -30,9 +30,14 @@ const useCartStore = create((set) => ({
   },
 
   // Tambah produk baru ke keranjang
-  addToCart: async (productId, quantity = 1) => {
+  addToCart: async (productOrId, quantity = 1) => {
     set({ updating: true });
     try {
+      // Ambil ID jika yang dikirim adalah objek, atau gunakan nilai langsung jika string
+      const productId = typeof productOrId === "object" 
+        ? (productOrId._id || productOrId.id) 
+        : productOrId;
+
       const res = await api.post("/cart", { productId, quantity });
       set({ cart: getCartItems(res.data) });
       return { success: true };
