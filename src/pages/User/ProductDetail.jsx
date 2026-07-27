@@ -44,6 +44,9 @@ export default function ProductDetail() {
 
         const productData = res.data.product || res.data;
 
+        console.log("PRODUCT DATA:", productData);
+        console.log("SELLER FIELD:", productData.seller);
+
         setProduct(productData);
 
         if (typeof setCurrentProduct === "function") {

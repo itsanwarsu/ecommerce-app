@@ -1,7 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  HiOutlineChatBubbleOvalLeft,
-} from "react-icons/hi2";
+import { HiOutlineChatBubbleOvalLeft } from "react-icons/hi2";
 import useCartStore from "../store/cartStore";
 
 export default function FooterNavbar({ product }) {
@@ -12,8 +10,18 @@ export default function FooterNavbar({ product }) {
   // Footer hanya tampil di halaman detail produk
   const isProductPage = location.pathname.startsWith("/product/");
 
-  // Jangan render apa pun selain di halaman produk
   if (!isProductPage) return null;
+
+const handleChat = () => {
+  if (!product) return;
+
+  navigate("/chat", {
+    state: {
+      productId: product._id,
+      sellerId: product.seller?._id || product.seller,
+    },
+  });
+};
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -31,8 +39,10 @@ export default function FooterNavbar({ product }) {
       <div className="flex items-center gap-2 p-3">
         {/* Chat */}
         <button
+          onClick={handleChat}
+          disabled={!product}
           aria-label="Chat penjual"
-          className="w-14 h-14 border rounded-lg flex items-center justify-center hover:bg-gray-50 active:bg-gray-100 transition-colors"
+          className="w-14 h-14 border rounded-lg flex items-center justify-center hover:bg-gray-50 active:bg-gray-100 transition-colors disabled:opacity-50"
         >
           <HiOutlineChatBubbleOvalLeft className="text-2xl text-gray-700" />
         </button>

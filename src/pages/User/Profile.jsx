@@ -17,10 +17,12 @@ import {
 
 import api from "../../api/axios";
 import useCartStore from "../../store/cartStore";
+import useChatStore from "../../store/chatStore";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const totalUnread = useChatStore((state) => state.getTotalUnread());
 
   // Ambil data profil dari backend
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function Profile() {
     localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
 
-useCartStore.getState().clearCart();
+    useCartStore.getState().clearCart();
     navigate("/login");
   }
 
@@ -65,8 +67,13 @@ useCartStore.getState().clearCart();
         <h2 className="text-3xl font-bold">Account</h2>
 
         <div className="flex items-center gap-4">
-          <Link to="/chat">
+          <Link to="/chat" className="relative">
             <HiOutlineChatBubbleOvalLeft className="text-2xl" />
+            {totalUnread > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">
+                {totalUnread > 9 ? "9+" : totalUnread}
+              </span>
+            )}
           </Link>
 
           <Link to="/notifications">
@@ -94,13 +101,13 @@ useCartStore.getState().clearCart();
       {/* Menu */}
       <div className="mt-5 bg-white rounded-xl mx-4 shadow">
 
-{user?.role === "superadmin" && (
-  <MenuItem
-  onClick={() => navigate("/superadmin")}
-  icon={<HiShieldCheck />}
-  title="Dashboard Super Admin"
-  />
-)}
+        {user?.role === "superadmin" && (
+          <MenuItem
+            onClick={() => navigate("/superadmin")}
+            icon={<HiShieldCheck />}
+            title="Dashboard Super Admin"
+          />
+        )}
         <MenuItem
           onClick={() => navigate("/orders")}
           icon={<HiOutlineShoppingBag />}
