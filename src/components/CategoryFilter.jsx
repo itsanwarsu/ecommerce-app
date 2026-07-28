@@ -1,7 +1,7 @@
 import useCategoryStore from "../store/categoryStore";
 
 // Daftar semua kategori yang ada di aplikasi kamu
-const CATEGORIES = ["Semua", "Gadget", "Laptop", "Fashion", "Aksesoris"];
+const CATEGORIES = ["All", "Handphone", "Laptop", "Fashion", "Aksesoris"];
 
 export default function CategoryFilter() {
   const { activeCategory, setActiveCategory } = useCategoryStore();

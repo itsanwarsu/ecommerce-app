@@ -42,7 +42,7 @@ export default function FooterNavbar({ product }) {
   const isBtnDisabled = !product;
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full bg-white border-t shadow-md z-50">
+    <footer className="fixed bottom-0 left-0 w-full bg-white border-t shadow-md z-30">
       <div className="flex items-center gap-2 p-3 max-w-screen-md mx-auto">
         {/* Chat */}
         <button

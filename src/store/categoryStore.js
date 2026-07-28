@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useCategoryStore = create((set) => ({
-  activeCategory: "Semua", // Kategori default
+  activeCategory: "All", // Kategori default
   setActiveCategory: (category) => set({ activeCategory: category }),
 }));
 

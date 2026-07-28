@@ -46,25 +46,40 @@ export default function Home() {
     }
   }, []);
 
-  // 2. Ambil produk dari backend
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await api.get("/products");
-           console.log(res.data);
-        // Safe check: pastikan yang masuk ke state selalu berbentuk Array
-        const data = Array.isArray(res.data) ? res.data : (res.data.products || []);
-        setProducts(data);
-      } catch (err) {
-        console.error("Gagal mengambil produk:", err);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+// 2. Ambil produk dari backend
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await api.get("/products");
+      console.log(res.data);
 
-    fetchProducts();
-  }, []);
+      // Safe check: pastikan yang masuk ke state selalu berbentuk Array
+      const data = Array.isArray(res.data)
+        ? res.data
+        : (res.data.products || []);
+
+      setProducts(data);
+
+      // Sinkronkan recent dengan produk yang masih ada di database
+      const currentUserRaw = localStorage.getItem("currentUser");
+      const currentUser = currentUserRaw
+        ? JSON.parse(currentUserRaw)
+        : null;
+
+      useRecentStore
+        .getState()
+        .syncRecentProducts(currentUser?._id, data);
+
+    } catch (err) {
+      console.error("Gagal mengambil produk:", err);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   // 3. Filter produk menggunakan useMemo untuk performa
   const filteredProducts = useMemo(() => {
@@ -77,7 +92,7 @@ export default function Home() {
 
       const matchesCategory =
         !activeCategory ||
-        activeCategory === "Semua" ||
+        activeCategory === "All" ||
         (product.category || "").toLowerCase() === activeCategory.toLowerCase();
 
       return matchesSearch && matchesCategory;
@@ -102,14 +117,16 @@ export default function Home() {
             <section className="max-w-7xl mx-auto px-4 py-4 border-b">
               <h2 className="text-xl font-bold mb-4">Terakhir Dilihat</h2>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {userRecentProducts.map((product) => (
-                  <ProductCard
-                    key={`recent-${product._id || product.id}`}
-                    product={product}
-                  />
-                ))}
-              </div>
+<div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+  {userRecentProducts.map((product) => (
+    <div
+      key={`recent-${product._id || product.id}`}
+      className="min-w-[170px] max-w-[170px] flex-shrink-0 snap-start"
+    >
+      <ProductCard product={product} />
+    </div>
+  ))}
+</div>
             </section>
           )}
         </>

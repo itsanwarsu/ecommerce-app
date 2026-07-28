@@ -22,7 +22,7 @@ const useRecentStore = create(
           (item) => (item._id || item.id) !== productId
         );
 
-        // Hanya simpan properti ringkas yang dibutuhkan UI ProductCard
+        // Simpan hanya data yang dibutuhkan
         const cleanProduct = {
           _id: productId,
           name: product.name,
@@ -31,7 +31,7 @@ const useRecentStore = create(
           category: product.category,
         };
 
-        // Masukkan produk ke urutan pertama, maksimal 4 produk
+        // Masukkan ke urutan pertama, maksimal 4 produk
         const updated = [cleanProduct, ...filtered].slice(0, 4);
 
         set((state) => ({
@@ -42,15 +42,53 @@ const useRecentStore = create(
         }));
       },
 
-      // Ambil riwayat produk berdasarkan userId
+      // Sinkronkan recent dengan data terbaru dari database
+      syncRecentProducts: (userId, products) => {
+        const key = userId || "guest";
+
+        const currentRecents = get().recentByUsers[key] || [];
+
+        // Map produk dari database agar pencarian lebih cepat
+        const productMap = new Map(
+          products.map((product) => [
+            product._id || product.id,
+            product,
+          ])
+        );
+
+        // Hapus produk yang sudah tidak ada dan update data terbaru
+        const updated = currentRecents
+          .filter((item) => productMap.has(item._id || item.id))
+          .map((item) => {
+            const latest = productMap.get(item._id || item.id);
+
+            return {
+              _id: latest._id || latest.id,
+              name: latest.name,
+              price: latest.price,
+              image: latest.image,
+              category: latest.category,
+            };
+          });
+
+        set((state) => ({
+          recentByUsers: {
+            ...state.recentByUsers,
+            [key]: updated,
+          },
+        }));
+      },
+
+      // Ambil riwayat berdasarkan userId
       getRecentProducts: (userId) => {
         const key = userId || "guest";
         return get().recentByUsers[key] || [];
       },
 
-      // Hapus riwayat untuk userId tertentu
+      // Hapus semua riwayat user tertentu
       clearRecentProducts: (userId) => {
         const key = userId || "guest";
+
         set((state) => ({
           recentByUsers: {
             ...state.recentByUsers,
@@ -60,10 +98,9 @@ const useRecentStore = create(
       },
     }),
     {
-      name: "recent-products-storage", // Nama key di LocalStorage
+      name: "recent-products-storage",
     }
   )
 );
 
 export default useRecentStore;
-

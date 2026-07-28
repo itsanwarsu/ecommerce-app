@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, layout = "grid" }) => {
   // Defensive check jika props product belum dimuat
   if (!product) return null;
 
@@ -26,6 +26,12 @@ const ProductCard = ({ product }) => {
       : product.image?.url || product.image) ||
     "https://via.placeholder.com/300x300?text=No+Image";
 
+  // Class card berdasarkan layout
+  const cardClass =
+    layout === "horizontal"
+      ? "flex bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300"
+      : "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1";
+
   // Hapus Produk
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
@@ -35,7 +41,7 @@ const ProductCard = ({ product }) => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/products/${productId}`,)
+      await api.delete(`/products/${productId}`);
 
       alert("Produk berhasil dihapus.");
 
@@ -52,10 +58,16 @@ const ProductCard = ({ product }) => {
   return (
     <div className="relative">
       <Link to={`/product/${productId}`} className="block">
-        <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div className={cardClass}>
 
           {/* Gambar Produk */}
-          <div className="relative w-full h-40 flex items-center justify-center p-2 bg-gray-50">
+          <div
+            className={
+              layout === "horizontal"
+                ? "relative w-32 h-32 flex-shrink-0 flex items-center justify-center p-2 bg-gray-50"
+                : "relative w-full h-40 flex items-center justify-center p-2 bg-gray-50"
+            }
+          >
             <img
               src={imageUrl}
               alt={product.name || "Gambar Produk"}
@@ -107,7 +119,13 @@ const ProductCard = ({ product }) => {
           </div>
 
           {/* Detail Produk */}
-          <div className="p-2">
+          <div
+            className={
+              layout === "horizontal"
+                ? "flex-1 p-3 flex flex-col justify-between"
+                : "p-2"
+            }
+          >
             <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
               {product.category || "General"}
             </p>

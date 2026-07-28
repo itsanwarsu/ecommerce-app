@@ -59,8 +59,8 @@ const isProductPage = paths.some(path =>
           </button>
 
           {/* Cart + Hamburger */}
-          <div className="flex items-center gap-4">
-            <Link
+          <div className="flex items-center gap-4">         
+   <Link
               to="/cart"
               className="relative p-1 text-gray-700 hover:text-blue-600 transition-colors"
               aria-label="Keranjang Belanja"
@@ -73,7 +73,7 @@ const isProductPage = paths.some(path =>
                 </span>
               )}
             </Link>
-          
+          <Sidebar />
           </div>
         </div>
       ) : (
@@ -107,8 +107,8 @@ const isProductPage = paths.some(path =>
                 </span>
               )}
             </Link>
-          <Sidebar />
-          </div>
+        <Sidebar />
+        </div>
         </div>
       )}
     </nav>
