@@ -21,8 +21,8 @@ import SuperAdminLayout from "./layouts/SuperAdminLayout";
 
 export default function App() {
   return (
-    <Routes>
-      {/* 1. LAYOUT UTAMA (Halaman Umum & Fitur Belanja) */}
+     <Routes>
+       {/* 1. LAYOUT UTAMA (Halaman Umum & Fitur Belanja) */}
       <Route element={<MainLayout />}>
         {/* Rute Publik */}
         <Route path="/" element={<Home />} />
@@ -53,6 +53,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
-  );
+ 
+ );
 }
 

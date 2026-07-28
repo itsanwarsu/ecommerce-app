@@ -12,13 +12,13 @@ export default function Success() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
-          <h1 className="text-3xl font-bold text-gray-800 mb-3">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
             Belum Ada Pesanan
           </h1>
 
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 dark:text-white mb-6">
             Kamu belum melakukan checkout.
           </p>
 
@@ -34,8 +34,8 @@ export default function Success() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-6">
+      <div className="bg-white bg-gray-800 rounded-2xl shadow-xl p-8 max-w-lg w-full">
 
         <div className="flex justify-center">
           <HiOutlineCheckCircle className="text-7xl text-green-500" />
@@ -49,7 +49,7 @@ export default function Success() {
           Terima kasih telah berbelanja.
         </p>
 
-        <div className="space-y-3 border rounded-xl p-5 bg-gray-50">
+        <div className="space-y-3 dark:bg-gray-800 border rounded-xl p-5 bg-gray-50">
 
           <div className="flex justify-between">
             <span className="font-medium">Nomor Pesanan</span>

@@ -53,8 +53,8 @@ export default function MyOrders() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-gray-500">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <p className="text-gray-500 dark:text-white">
           Memuat pesanan...
         </p>
       </div>
@@ -64,14 +64,14 @@ export default function MyOrders() {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-black flex flex-col items-center justify-center p-6">
         <HiOutlineShoppingBag className="text-7xl text-gray-400 mb-4" />
 
         <h1 className="text-3xl font-bold mb-2">
           Pesanan Saya
         </h1>
 
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-white">
           Kamu belum memiliki pesanan.
         </p>
       </div>
@@ -80,13 +80,13 @@ export default function MyOrders() {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 text-black p-5 pt-24">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900  dark:text-white text-black p-5 pt-24">
 
       <div className="max-w-4xl mx-auto">
 
         <div className="flex justify-between items-center mb-6">
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold ">
             Pesanan Saya
           </h1>
 
@@ -105,6 +105,7 @@ export default function MyOrders() {
               focus:outline-none
               focus:ring-2
               focus:ring-blue-500
+              dark:bg-gray-800
             "
           />
 
@@ -114,7 +115,7 @@ export default function MyOrders() {
 
         {filteredOrders.length === 0 ? (
 
-          <p className="text-center text-gray-500 py-10">
+          <p className="text-center dark:text-white text-gray-500 py-10">
             Transaksi tidak ditemukan.
           </p>
 
@@ -126,6 +127,7 @@ export default function MyOrders() {
               key={order._id}
               className="
                 bg-white
+                dark:bg-gray-800
                 rounded-2xl
                 shadow-md
                 p-6
@@ -152,11 +154,11 @@ export default function MyOrders() {
 
                 <span
                   className="
-                    bg-yellow-100
-                    text-yellow-700
-                    px-3
-                    py-1
-                    rounded-full
+                    bg-gray-600
+                    text-white
+                    py-2 px-3 
+                    h-10
+                    rounded-md
                     text-sm
                     font-semibold
                   "

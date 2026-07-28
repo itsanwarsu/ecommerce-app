@@ -42,7 +42,7 @@ const ProductCard = ({ product, layout = "grid" }) => {
 
     try {
       await api.delete(`/products/${productId}`);
-
+1
       alert("Produk berhasil dihapus.");
 
       // Refresh halaman agar data terbaru tampil
@@ -64,8 +64,8 @@ const ProductCard = ({ product, layout = "grid" }) => {
           <div
             className={
               layout === "horizontal"
-                ? "relative w-32 h-32 flex-shrink-0 flex items-center justify-center p-2 bg-gray-50"
-                : "relative w-full h-40 flex items-center justify-center p-2 bg-gray-50"
+                ? "relative w-32 h-32 flex-shrink-0 flex items-center justify-center p-2 dark:bg-gray-800 bg-gray-50"
+                : "relative w-full h-40 flex items-center justify-center p-2 bg-gray-50 dark:bg-gray-800"
             }
           >
             <img
@@ -123,14 +123,14 @@ const ProductCard = ({ product, layout = "grid" }) => {
             className={
               layout === "horizontal"
                 ? "flex-1 p-3 flex flex-col justify-between"
-                : "p-2"
+                : "p-2 dark:bg-gray-800"
             }
           >
             <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
               {product.category || "General"}
             </p>
 
-            <h2 className="font-semibold text-sm mt-0.5 text-gray-800 line-clamp-2 min-h-[2.5rem]">
+            <h2 className="font-semibold dark:text-white text-sm mt-0.5 text-gray-800 line-clamp-2 min-h-[2.5rem]">
               {product.name || "Nama Produk"}
             </h2>
 

@@ -45,7 +45,7 @@ const isProductPage = paths.some(path =>
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white px-4 md:px-6 py-3 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 dark:text-white px-4 md:px-6 py-3 shadow-sm">
     
       {isProductPage ? (
         <div className="flex items-center justify-between">
@@ -53,7 +53,7 @@ const isProductPage = paths.some(path =>
           <button
             onClick={() => navigate(-1)}
             aria-label="Kembali"
-            className="p-1 -ml-1 text-gray-700 hover:text-blue-600 transition-colors"
+            className="p-1 -ml-1 text-gray-700 hover:text-blue-600 dark:text-white transition-colors"
           >
             <HiArrowLeft className="w-6 h-6 cursor-pointer" />
           </button>
@@ -65,7 +65,7 @@ const isProductPage = paths.some(path =>
               className="relative p-1 text-gray-700 hover:text-blue-600 transition-colors"
               aria-label="Keranjang Belanja"
             >
-              <HiOutlineShoppingCart className="text-2xl cursor-pointer" />
+              <HiOutlineShoppingCart className="text-2xl dark:text-white cursor-pointer" />
 
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow">
@@ -87,7 +87,7 @@ const isProductPage = paths.some(path =>
               placeholder="Cari produk..."
               value={search}
               onChange={handleSearchChange}
-              className="w-full rounded-lg border border-gray-200 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="w-full rounded-lg border dark:bg-gray-800 border-gray-200 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
           </div>
 
@@ -99,7 +99,7 @@ const isProductPage = paths.some(path =>
               className="relative p-1 text-gray-700 hover:text-blue-600 transition-colors"
               aria-label="Keranjang Belanja"
             >
-              <HiOutlineShoppingCart className="text-2xl cursor-pointer" />
+              <HiOutlineShoppingCart className="text-2xl dark:text-white cursor-pointer" />
 
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow">

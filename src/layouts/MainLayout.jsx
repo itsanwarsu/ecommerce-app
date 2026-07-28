@@ -28,11 +28,14 @@ export default function MainLayout() {
 
   return (
     <>
+ <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+     
       {!hideNavbar && <Navbar />}
       {/* Kita berikan fungsi untuk mengeset produk ke semua halaman anak */}
       <Outlet context={{ setCurrentProduct }} />
       {/* Berikan data produk yang sedang aktif ke FooterNavbar */}
       <FooterNavbar product={currentProduct} />
-    </>
+</div>    
+</>
   );
 }

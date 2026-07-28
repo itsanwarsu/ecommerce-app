@@ -7,6 +7,7 @@ import {
   HiOutlineCog6Tooth,
   HiOutlineUserCircle,
 } from "react-icons/hi2";
+import ThemeToggle from './ThemeToggle';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function Sidebar() {
         onClick={() => setOpen(true)}
         className="p-2 rounded-lg hover:bg-gray-100 transition"
       >
-        <HiOutlineBars3 className="text-3xl text-gray-700" />
+        <HiOutlineBars3 className="text-3xl dark:text-white text-gray-700" />
       </button>
 
       {/* Overlay */}
@@ -49,19 +50,18 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-900 shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="font-bold text-lg">Menu</h2>
-
+         <ThemeToggle />
           <button
             onClick={() => setOpen(false)}
             className="p-1 rounded-lg hover:bg-gray-100 transition"
           >
-            <HiOutlineXMark className="text-3xl text-gray-700" />
+            <HiOutlineXMark className="text-3xl dark:text-white text-gray-700" />
           </button>
         </div>
 
@@ -73,7 +73,7 @@ export default function Sidebar() {
                 <img
                   src={currentUser.avatar}
                   alt="Avatar"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full dark:bg-gray-800 object-cover"
                 />
               ) : (
                 <HiOutlineUserCircle className="text-5xl text-gray-500" />
@@ -82,7 +82,7 @@ export default function Sidebar() {
 
             <div>
 <Link to="/profile">            
-  <h3 className="font-semibold text-gray-800">
+  <h3 className="font-semibold text-gray-800 dark:text-white">
                 {currentUser?.name || "Guest"}
               </h3>
 

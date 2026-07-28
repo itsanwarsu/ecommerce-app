@@ -42,7 +42,7 @@ export default function FooterNavbar({ product }) {
   const isBtnDisabled = !product;
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full bg-white border-t shadow-md z-30">
+    <footer className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t shadow-md z-30">
       <div className="flex items-center gap-2 p-3 max-w-screen-md mx-auto">
         {/* Chat */}
         <button
@@ -51,7 +51,7 @@ export default function FooterNavbar({ product }) {
           aria-label="Chat penjual"
           className="w-14 h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 active:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <HiOutlineChatBubbleOvalLeft className="text-2xl text-gray-700" />
+          <HiOutlineChatBubbleOvalLeft className="text-2xl text-gray-700 dark:text-white" />
         </button>
 
         {/* Tambah Keranjang */}

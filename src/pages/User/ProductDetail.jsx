@@ -138,7 +138,7 @@ export default function ProductDetail() {
         pagination={{ clickable: true }}
         spaceBetween={10}
         slidesPerView={1}
-        className="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm"
+        className="rounded-2xl overflow-hidden bg-white dark:bg-gray-800 border border-gray-100 shadow-sm"
       >
         {imageList.map((image, index) => (
           <SwiperSlide key={index}>
@@ -162,7 +162,7 @@ export default function ProductDetail() {
 
         <button
           onClick={handleWishlist}
-          className="mr-2 w-12 h-12 rounded-full bg-white border border-gray-200 shadow flex items-center justify-center hover:scale-110 transition"
+          className="mr-2 w-9 h-9 rounded-full dark:bg-gray-900 bg-white  shadow flex items-center justify-center hover:scale-110 transition"
         >
           {isWishlisted ? (
             <HiHeart className="text-red-500 text-3xl" />
@@ -178,16 +178,16 @@ export default function ProductDetail() {
       </h1>
 
       {/* Deskripsi */}
-      <div className="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <div className="mt-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 shadow-sm p-6">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-1.5 h-6 bg-blue-600 rounded-full"></div>
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Deskripsi Produk
           </h2>
         </div>
 
         <div className="border-t pt-4">
-          <p className="text-gray-700 text-[15px] leading-8 whitespace-pre-line">
+          <p className="text-gray-700 dark:text-white text-[15px] leading-8 whitespace-pre-line">
             {product.description ||
               "Tidak ada deskripsi untuk produk ini."}
           </p>

@@ -108,7 +108,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="bg-white text-black mt-[72px] min-h-screen">
+    <div className="bg-white dark:bg-gray-900 dark:text-white text-black mt-[65px] min-h-screen">
       {!isSearching && (
         <>
           {!isLogin && <LoginCard />}

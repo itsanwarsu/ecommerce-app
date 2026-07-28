@@ -38,14 +38,14 @@ export default function Wishlist() {
       </div>
 
       {wishlist.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow p-10 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-10 text-center">
           <HiHeart className="mx-auto text-6xl text-gray-300 mb-4" />
 
           <h2 className="text-xl font-semibold">
             Wishlist masih kosong
           </h2>
 
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-white mt-2">
             Tambahkan produk favoritmu ke wishlist.
           </p>
 
@@ -58,7 +58,7 @@ export default function Wishlist() {
         </div>
       ) : (
         <>
-          <div className="mb-5 text-gray-600">
+          <div className="mb-5 text-gray-600 dark:text-white">
             Total Produk :
             <span className="font-semibold ml-2">
               {wishlist.length}
@@ -69,7 +69,7 @@ export default function Wishlist() {
             {wishlist.map((product) => (
               <div
                 key={product._id}
-                className="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-lg transition overflow-hidden"
               >
                 <Link to={`/product/${product._id}`}>
                   <img

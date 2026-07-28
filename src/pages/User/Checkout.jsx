@@ -43,13 +43,13 @@ export default function Checkout() {
   // Keranjang kosong
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
-          <h2 className="text-3xl font-bold text-gray-800 mb-3">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
+          <h2 className="text-3xl font-bold dark:text-white text-gray-800 mb-3">
             Keranjang Kosong
           </h2>
 
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 mb-6 dark:text-white">
             Tambahkan produk ke keranjang terlebih dahulu.
           </p>
 
@@ -96,14 +96,14 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-24 pb-10 px-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-24 pb-10 px-4">
       <div className="max-w-3xl mx-auto">
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
           Checkout
         </h1>
 
-        <div className="bg-white rounded-2xl shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
 
           {/* Form */}
           <div className="space-y-4">
@@ -113,7 +113,7 @@ export default function Checkout() {
               placeholder="Nama Lengkap"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full dark:bg-gray-800 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <textarea
@@ -121,7 +121,7 @@ export default function Checkout() {
               placeholder="Alamat Lengkap"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full dark:bg-gray-800 border border-gray-300 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
           </div>

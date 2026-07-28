@@ -57,8 +57,8 @@ export default function Cart() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-lg font-medium text-gray-600">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+        <p className="text-lg font-medium dark:text-white text-gray-600">
           Memuat keranjang...
         </p>
       </div>
@@ -66,15 +66,15 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-24 pb-10 px-4">
+    <div className="min-h-screen dark:bg-gray-900 bg-gray-100 dark:text-white pt-24 pb-10 px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl font-bold dark:text-white text-gray-800 mb-6">
           Keranjang Belanja 🛒
         </h1>
 
         {cart.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow p-10 text-center">
-            <p className="text-gray-500 text-lg mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-10 text-center">
+            <p className="text-gray-500 text-lg mb-6 dark:text-white">
               Keranjang belanja Anda masih kosong.
             </p>
 
@@ -94,7 +94,7 @@ export default function Cart() {
                 return (
                   <div
                     key={item.id}
-                    className="bg-white rounded-2xl shadow border border-gray-200 p-4 flex items-center justify-between"
+                    className="bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-200 p-4 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-4">
                       <img
@@ -104,7 +104,7 @@ export default function Cart() {
                       />
 
                       <div>
-                        <h3 className="text-lg font-bold text-gray-800">
+                        <h3 className="text-sm font-bold dark:text-white text-gray-800">
                           {item.name}
                         </h3>
 
@@ -114,7 +114,7 @@ export default function Cart() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <div className="flex items-center gap-2">
                         <button
              disabled={updating}
@@ -125,12 +125,12 @@ export default function Cart() {
                               console.error(err);
                             }
                           }}
-                          className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 font-bold"
+                          className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-700 font-bold"
                         >
-                          −
+                           -
                         </button>
 
-                        <span className="w-8 text-center font-semibold text-gray-800">
+                        <span className="w-3 text-center font-semibold text-gray-800">
                           {item.quantity}
                         </span>
 
@@ -167,9 +167,9 @@ export default function Cart() {
               })}
             </div>
 
-            <div className="mt-8 bg-white rounded-2xl shadow border border-gray-200 p-6">
+            <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-200 p-6">
               <div className="flex justify-between items-center mb-6">
-                <span className="text-xl font-semibold text-gray-700">
+                <span className="text-xl font-semibold dark:text-white text-gray-700">
                   Total Belanja
                 </span>
 

@@ -145,8 +145,8 @@ export default function LocalReviews({ productId }) {
   return (
     <div className="max-w-2xl mx-auto p-4">
       {/* Header Summary */}
-      <div className="mb-6 bg-white rounded-xl border p-4 shadow-sm">
-        <h2 className="text-2xl font-bold text-gray-800">Ulasan Pembeli</h2>
+      <div className="mb-6 dark:bg-gray-800 bg-white rounded-xl border p-4 shadow-sm">
+        <h2 className="text-2xl font-bold dark:text-white text-gray-800">Ulasan Pembeli</h2>
 
         <div className="flex items-center gap-2 mt-2">
           <div className="flex">
@@ -177,22 +177,22 @@ export default function LocalReviews({ productId }) {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl border shadow-sm p-4 mb-6 space-y-4"
+          className="bg-white dark:bg-gray-800 rounded-xl border shadow-sm p-4 mb-6 space-y-4"
         >
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
+            <label className="block text-sm font-medium mb-1 dark:text-white text-gray-700">
               Nama
             </label>
             <input
               type="text"
               value={username}
               disabled
-              className="w-full border rounded-lg p-2 bg-gray-100 text-gray-600 cursor-not-allowed"
+              className="w-full border rounded-lg p-2 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-white cursor-not-allowed"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-white">
               Rating
             </label>
             <div className="flex gap-1">
@@ -214,7 +214,7 @@ export default function LocalReviews({ productId }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-white">
               Komentar
             </label>
             <textarea
@@ -222,12 +222,12 @@ export default function LocalReviews({ productId }) {
               onChange={(e) => setComment(e.target.value)}
               rows={4}
               placeholder="Bagaimana kualitas produk ini? (min. 10 karakter)"
-              className="w-full border rounded-lg p-3 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full border dark:bg-gray-800 dark:text-white rounded-lg p-3 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-white">
               Upload Foto (Opsional)
             </label>
             <input
@@ -261,7 +261,7 @@ export default function LocalReviews({ productId }) {
       {/* List Ulasan */}
       <div className="space-y-4">
         {reviews.length === 0 ? (
-          <div className="text-center py-8 text-gray-500 bg-white border rounded-xl">
+          <div className="text-center py-8 text-gray-500 bg-white dark:bg-gray-800 dark:text-white border rounded-xl">
             Belum ada ulasan untuk produk ini.
           </div>
         ) : (
