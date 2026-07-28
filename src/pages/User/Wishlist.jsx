@@ -50,7 +50,7 @@ export default function Wishlist() {
           </p>
 
           <Link
-            to="/products"
+            to="/"
             className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
           >
             Mulai Belanja
@@ -71,7 +71,7 @@ export default function Wishlist() {
                 key={product._id}
                 className="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"
               >
-                <Link to={`/products/${product._id}`}>
+                <Link to={`/product/${product._id}`}>
                   <img
                     src={
                       product.images?.[0]?.url ||
@@ -97,7 +97,7 @@ export default function Wishlist() {
 
                   <div className="flex gap-2 mt-4">
                     <Link
-                      to={`/products/${product._id}`}
+                      to={`/product/${product._id}`}
                       className="flex-1 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700"
                     >
                       Lihat

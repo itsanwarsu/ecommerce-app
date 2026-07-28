@@ -28,7 +28,11 @@ export default function Navbar() {
   );
 
   // Cek apakah sedang berada di halaman Product Detail
-  const isProductPage = location.pathname.startsWith("/product");
+const paths = ["/product", "/wishlist", "/cart", "/chat", "/orders",];
+
+const isProductPage = paths.some(path =>
+  location.pathname.startsWith(path)
+);
 
   // Handler search: Otomatis arahkan ke Home/Katalog jika user mengetik di halaman lain
   const handleSearchChange = (e) => {
