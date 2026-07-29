@@ -28,3 +28,10 @@ export const sendMessage = async (data) => {
   const res = await api.post("/messages", data);
   return res.data;
 };
+
+// ecommerce-app/src/services/chatService.js
+export const deleteConversationApi = async (conversationId) => {
+  const response = await api.delete(`/conversations/${conversationId}`); // sesuaikan instance axios kamu
+  return response.data;
+};
+

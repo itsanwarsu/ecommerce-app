@@ -1,47 +1,75 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import ChatSidebar from "../../components/chat/ChatSidebar";
 import ChatWindow from "../../components/chat/ChatWindow";
-
 import useChatStore from "../../store/chatStore";
-import { createConversation } from "../../services/chatService";
 
 const Chat = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const { productId, sellerId } = location.state || {};
 
-  const selectConversation = useChatStore(
-    (state) => state.selectConversation
-  );
+  const fetchConversations = useChatStore((state) => state.fetchConversations);
+  const selectedConversation = useChatStore((state) => state.selectedConversation);
+  const startOrSelectConversation = useChatStore((state) => state.startOrSelectConversation);
 
+  // Ref untuk memastikan inisialisasi chat HANYA BERJALAN 1 KALI
+  const hasInitialized = useRef(false);
+
+  // Load semua daftar percakapan saat pertama masuk
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+  // Handle jika masuk dari tombol 'Chat Penjual' di detail produk
   useEffect(() => {
     const initChat = async () => {
-      if (!productId || !sellerId) return;
+      // Mencegah eksekusi ganda atau jika data tidak ada
+      if (!productId || !sellerId || hasInitialized.current) return;
+
+      hasInitialized.current = true; // Tandai bahwa inisialisasi sudah dilakukan
 
       try {
-        const conversation = await createConversation({
+        await startOrSelectConversation({
           receiverId: sellerId,
           productId: productId,
         });
-        await selectConversation(conversation);
+
+        // Bersihkan location.state dari browser history agar tidak ter-trigger lagi
+        navigate(location.pathname, { replace: true, state: {} });
       } catch (err) {
-        console.error(err);
+        console.error("Init chat error:", err);
       }
     };
 
     initChat();
-  }, [productId, sellerId]);
+  }, [productId, sellerId, startOrSelectConversation, navigate, location.pathname]);
 
   return (
     <div className="h-screen bg-gray-100 flex flex-col">
-      <div className="flex flex-1 overflow-hidden">
-        <ChatSidebar />
-        <ChatWindow />
+      <div className="flex flex-1 overflow-hidden relative">
+        {/*
+          1. Sidebar (Daftar Chat)
+          Mobile: Jika ada selectedConversation -> hidden, jika tidak -> flex
+          Desktop (md:): Selalu tampil sebagai flex (w-80)
+        */}
+        <div className={`w-full md:w-80 h-full ${selectedConversation ? "hidden md:flex" : "flex"} flex-col border-r bg-white`}>
+          <ChatSidebar />
+        </div>
+
+        {/*
+          2. ChatWindow (Isi Pesan)
+          Mobile: Jika ada selectedConversation -> flex, jika tidak -> hidden
+          Desktop (md:): Selalu tampil flex
+        */}
+        <div className={`flex-1 h-full ${selectedConversation ? "flex" : "hidden md:flex"} flex-col bg-white`}>
+          <ChatWindow />
+        </div>
       </div>
     </div>
   );
 };
 
 export default Chat;
+

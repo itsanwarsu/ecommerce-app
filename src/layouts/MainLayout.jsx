@@ -8,7 +8,7 @@ export default function MainLayout() {
   const [currentProduct, setCurrentProduct] = useState(null);
   const location = useLocation();
 
-  const hideNavbarRoutes = ["/profile", "/order","/checkout",];
+  const hideNavbarRoutes = ["/profile", "/order","/checkout", "/chat"];
   const hideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   const connectSocket = useChatStore((state) => state.connectSocket);

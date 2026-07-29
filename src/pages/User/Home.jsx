@@ -111,7 +111,9 @@ useEffect(() => {
     <div className="bg-white dark:bg-gray-900 dark:text-white text-black mt-[65px] min-h-screen">
       {!isSearching && (
         <>
-          {!isLogin && <LoginCard />}
+          {!isLogin &&
+     
+ <LoginCard  />}
 
           {userRecentProducts.length > 0 && (
             <section className="max-w-7xl mx-auto px-4 py-4 border-b">

@@ -3,7 +3,7 @@ import { HiOutlineUserCircle } from "react-icons/hi2";
 
 export default function LoginCard() {
   return (
-    <div className="bg-white rounded-xl shadow p-4 mx-4 mt-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mx-4  max-w-lg">
       <div className="flex items-center gap-4">
         <HiOutlineUserCircle className="text-6xl text-green-600" />
 
