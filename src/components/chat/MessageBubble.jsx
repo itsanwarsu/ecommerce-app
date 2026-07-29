@@ -1,38 +1,50 @@
+import React from "react";
+
 const MessageBubble = ({ message, currentUser }) => {
+  // Parsing sender ID (bisa berupa object populated atau string ID)
   const senderId =
     typeof message.sender === "object"
-      ? message.sender?._id
+      ? message.sender._id || message.sender.id
       : message.sender;
 
-  const mine = senderId === currentUser;
-  const product = message.product;
+  // Cek apakah pesan ini dikirim oleh user yang sedang login
+  const isOwnMessage = String(senderId) === String(currentUser);
+
+  // Ambil detail produk jika ada lampiran
+  const product = message.productId || message.product;
 
   return (
     <div
-      className={`flex mb-3 ${
-        mine ? "justify-end" : "justify-start"
+      className={`flex w-full my-1 ${
+        isOwnMessage ? "justify-end" : "justify-start"
       }`}
     >
       <div
-        className={`max-w-[75%] rounded-2xl p-3 shadow-sm ${
-          mine
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-900 border border-gray-200"
+        className={`max-w-[75%] sm:max-w-[65%] rounded-2xl p-3 shadow-sm transition-all ${
+          isOwnMessage
+            ? "bg-sky-500 text-white rounded-br-none" // Pengirim: Biru Langit Smooth
+            : "bg-gray-100 text-gray-800 border border-gray-200 rounded-bl-none" // Penerima: Abu-abu Soft
         }`}
       >
-        {/* Render Kartu Lampiran Produk Jika Pesan Ini Memiliki Produk */}
+        {/* Lampiran Kartu Produk (jika ada) */}
         {product && (
-          <div className="mb-2 p-2 bg-white text-gray-900 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
+          <div
+            className={`p-2 mb-2 rounded-xl border flex items-center gap-3 ${
+              isOwnMessage
+                ? "bg-white text-gray-800 border-sky-100"
+                : "bg-white text-gray-800 border-gray-200"
+            }`}
+          >
             <img
               src={product.image?.url || product.image || "/placeholder.png"}
               alt={product.name || "Produk"}
-              className="w-12 h-12 rounded-lg object-cover border flex-shrink-0"
+              className="w-12 h-12 object-cover rounded-lg flex-shrink-0 bg-gray-50 border"
             />
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-xs truncate">
-                {product.name || "Nama produk tidak tersedia"}
+            <div className="overflow-hidden text-left">
+              <p className="text-xs font-semibold line-clamp-1">
+                {product.name || "Detail Produk"}
               </p>
-              <p className="text-blue-600 font-bold text-xs mt-0.5">
+              <p className="text-xs font-bold text-sky-600 mt-0.5">
                 Rp {Number(product.price || 0).toLocaleString("id-ID")}
               </p>
             </div>
@@ -41,17 +53,19 @@ const MessageBubble = ({ message, currentUser }) => {
 
         {/* Teks Pesan */}
         {message.text && (
-          <p className="break-words text-sm">{message.text}</p>
+          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+            {message.text}
+          </p>
         )}
 
-        {/* Waktu Kirim Pesan */}
+        {/* Jam Kirim Pesan */}
         <div
-          className={`mt-1 text-[10px] text-right ${
-            mine ? "text-blue-100" : "text-gray-400"
+          className={`text-[10px] mt-1 text-right font-medium ${
+            isOwnMessage ? "text-sky-100" : "text-gray-400"
           }`}
         >
           {message.createdAt
-            ? new Date(message.createdAt).toLocaleTimeString([], {
+            ? new Date(message.createdAt).toLocaleTimeString("id-ID", {
                 hour: "2-digit",
                 minute: "2-digit",
               })

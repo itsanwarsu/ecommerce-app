@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
@@ -6,6 +7,8 @@ import useChatStore from "../../store/chatStore";
 
 const ChatWindow = () => {
   const location = useLocation();
+  const messagesEndRef = useRef(null);
+
   // Tangkap productId dari navigasi saat klik 'Chat Penjual'
   const initialProductId = location.state?.productId;
 
@@ -14,9 +17,20 @@ const ChatWindow = () => {
     (state) => state.selectedConversation
   );
 
-  const currentUser = JSON.parse(
+  // Ambil user ID dengan fallback yang aman (support _id & id)
+  const currentUserData = JSON.parse(
     localStorage.getItem("currentUser") || "{}"
-  )?._id;
+  );
+  const currentUserId = currentUserData?._id || currentUserData?.id;
+
+  // Auto Scroll ke pesan paling bawah setiap kali messages bertambah
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   if (!selectedConversation) {
     return (
@@ -51,7 +65,7 @@ const ChatWindow = () => {
             <MessageBubble
               key={message._id || message.id}
               message={message}
-              currentUser={currentUser}
+              currentUser={currentUserId}
             />
           ))
         ) : (
@@ -59,6 +73,8 @@ const ChatWindow = () => {
             Belum ada pesan. Mulai percakapan sekarang.
           </div>
         )}
+        {/* Element jangkar untuk auto scroll */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Teruskan initialProductId ke ChatInput sebagai draft */}
