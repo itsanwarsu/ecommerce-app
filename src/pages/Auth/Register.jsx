@@ -6,6 +6,7 @@ import {
   HiOutlineLockClosed,
 } from "react-icons/hi2";
 import api from "../../api/axios";
+import Swal from "sweetalert2"
 
 export default function Register() {
   const navigate = useNavigate();
@@ -13,16 +14,23 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
 
 const handleRegister = async (e) => {
   e.preventDefault();
 
   if (!name || !email || !password) {
-    alert("Semua data harus diisi!");
-    return;
+ Swal.fire({
+  icon: "warning",
+  title: "Oops...",
+  text: "Email And Password Must Be Filled!",
+  confirmButtonColor: "#16a34a", // hijau
+});
+
+return
   }
 
+setLoading(true);
   try {
       const response = await api.post("/auth/register", {
         name,
@@ -31,14 +39,26 @@ const handleRegister = async (e) => {
       }
     );
 
-    alert(response.data.message);
-    navigate("/login");
+  await Swal.fire({
+  title: "Berhasil!",
+  text: response.data.message,
+  icon: "success",
+  confirmButtonText: "OK",
+});
+
+navigate("/login");
   } catch (error) {
-    alert(
-      error.response?.data?.message ||
-      error.message ||
-      "Pendaftaran gagal."
-    );
+Swal.fire({
+  title: "Registration Failed",
+  text:
+    error.response?.data?.message ||
+    error.message ||
+    "Registration Failed.",
+  icon: "error",
+  confirmButtonText: "OK",
+});
+  }finally {
+    setLoading(false);
   }
 };
 
@@ -51,7 +71,7 @@ const handleRegister = async (e) => {
       >
 
         <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
-          Daftar Akun
+          Account Regisration
         </h1>
 
         {/* Nama */}
@@ -60,7 +80,7 @@ const handleRegister = async (e) => {
 
           <input
             type="text"
-            placeholder="Nama Lengkap"
+            placeholder="Full Name"
             className="w-full border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -93,15 +113,45 @@ const handleRegister = async (e) => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
-        >
-          Daftar
-        </button>
-
+<button
+  type="submit"
+  disabled={loading}
+  className={`w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+    loading
+      ? "bg-green-500 cursor-not-allowed"
+      : "bg-green-600 hover:bg-green-700 active:scale-95"
+  }`}
+>
+  {loading ? (
+    <>
+      <svg
+        className="w-5 h-5 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        />
+      </svg>
+      Loading...
+    </>
+  ) : (
+    "Register"
+  )}
+</button>
         <p className="text-center mt-5 text-sm">
-          Sudah punya akun?
+          Already Have Account?
           <Link
             to="/login"
             className="text-green-600 font-semibold ml-1"

@@ -13,6 +13,9 @@ import SuperAdmin from "./pages/SuperAdmin/SuperAdmin";
 import SuperAdminRoute from "./components/protected/SuperAdminRoute";
 import AddProduct from "./pages/Admin/AddProduct";
 import Wishlist from "./pages/User/Wishlist";
+import useCartStore from "./store/cartStore";
+import { useEffect } from "react";
+import GoogleSuccess from "./pages/Auth/GoogleSuccess";
 
 // Perbaikan: Gunakan PascalCase untuk folder/file layout jika memungkinkan
 import MainLayout from "./layouts/MainLayout"; 
@@ -20,6 +23,13 @@ import AuthLayout from "./layouts/AuthLayout";
 import SuperAdminLayout from "./layouts/SuperAdminLayout";
 
 export default function App() {
+useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      useCartStore.getState().loadCart();
+    }
+  }, []);
+
   return (
      <Routes>
        {/* 1. LAYOUT UTAMA (Halaman Umum & Fitur Belanja) */}
@@ -51,6 +61,7 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/google-success" element={<GoogleSuccess />} />
       </Route>
     </Routes>
  
