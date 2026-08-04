@@ -82,7 +82,7 @@ setLoading(true);
   type="button"
   onClick={() => {
     window.location.href =
-      "https://backend-express-production-0c49.up.railway.app/api/auth/google";
+      "https://backend-express-production-9a2e.up.railway.app/api/auth/google";
   }}
   className="w-full mt-4 mb-4 flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition"
 >
