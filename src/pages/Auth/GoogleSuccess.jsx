@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axios";
+import useAuthStore from "../../store/authStore";
 
 export default function GoogleSuccess() {
   const navigate = useNavigate();
+
+  const setToken = useAuthStore((state) => state.setToken);
+  const fetchProfile = useAuthStore((state) => state.fetchProfile);
 
   useEffect(() => {
     const loginGoogle = async () => {
@@ -13,46 +16,40 @@ export default function GoogleSuccess() {
         const token = params.get("token");
 
         if (!token) {
-          navigate("/login");
+          navigate("/login", { replace: true });
           return;
         }
 
-        // Simpan token
-        localStorage.setItem("token", token);
+        // Simpan token ke Zustand + localStorage
+        setToken(token);
 
-        // Ambil data user
-        const response = await api.get("/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // Simpan data user jika diperlukan
-        localStorage.setItem(
-          "user",
-          JSON.stringify(response.data.user)
-        );
+        // Ambil profile user dari backend
+        await fetchProfile();
 
         // Redirect ke Home
-        navigate("/");
+        navigate("/", { replace: true });
+
       } catch (error) {
-        console.error(error);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        navigate("/login");
+        console.error("Google Login Error:", error);
+
+        useAuthStore.getState().logout();
+
+        navigate("/login", { replace: true });
       }
     };
 
     loginGoogle();
-  }, [navigate]);
+  }, [navigate, setToken, fetchProfile]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-center">
         <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+
         <h2 className="text-xl font-semibold">
           Memproses Login Google...
         </h2>
+
         <p className="text-gray-500 mt-2">
           Mohon tunggu sebentar.
         </p>

@@ -7,19 +7,22 @@ import {
   HiOutlineCog6Tooth,
   HiOutlineUserCircle,
 } from "react-icons/hi2";
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from "./ThemeToggle";
+import useAuthStore from "../store/authStore";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
 
-  // Ambil data user dengan aman
-  let currentUser = null;
+  const currentUser = useAuthStore((state) => state.user);
+  const fetchProfile = useAuthStore((state) => state.fetchProfile);
+  const token = useAuthStore((state) => state.token);
 
-  try {
-    currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-  } catch (err) {
-    currentUser = null;
-  }
+  // Ambil profile jika sudah login
+  useEffect(() => {
+    if (token && !currentUser) {
+      fetchProfile();
+    }
+  }, [token, currentUser, fetchProfile]);
 
   // Mencegah body ikut scroll saat sidebar terbuka
   useEffect(() => {
@@ -56,7 +59,8 @@ export default function Sidebar() {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-         <ThemeToggle />
+          <ThemeToggle />
+
           <button
             onClick={() => setOpen(false)}
             className="p-1 rounded-lg hover:bg-gray-100 transition"
@@ -67,13 +71,13 @@ export default function Sidebar() {
 
         {/* Profile */}
         <div className="p-5 border-b">
- <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
               {currentUser?.avatar ? (
                 <img
                   src={currentUser.avatar}
                   alt="Avatar"
-                  className="w-full h-full dark:bg-gray-800 object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <HiOutlineUserCircle className="text-5xl text-gray-500" />
@@ -81,15 +85,15 @@ export default function Sidebar() {
             </div>
 
             <div>
-<Link to="/profile">            
-  <h3 className="font-semibold text-gray-800 dark:text-white">
-                {currentUser?.name || "Guest"}
-              </h3>
+              <Link to="/profile">
+                <h3 className="font-semibold text-gray-800 dark:text-white">
+                  {currentUser?.name || "Guest"}
+                </h3>
 
-              <p className="text-sm text-gray-500">
-                {currentUser?.email || "Silakan login"}
-              </p>
-</Link>
+                <p className="text-sm text-gray-500">
+                  {currentUser?.email || "Silakan login"}
+                </p>
+              </Link>
             </div>
           </div>
         </div>
