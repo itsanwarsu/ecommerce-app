@@ -17,8 +17,8 @@ import GoogleSuccess from "./pages/Auth/GoogleSuccess";
 
 import SuperAdmin from "./pages/SuperAdmin/SuperAdmin";
 import AddProduct from "./pages/Admin/AddProduct";
-
-import SuperAdminRoute from "./components/protected/SuperAdminRoute";
+import ProtectedRoute from "./components/protected/ProtectedRoute";
+import RoleRoute from "./components/protected/RoleRoute";
 
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -28,47 +28,74 @@ import useCartStore from "./store/cartStore";
 import useAuthStore from "./store/authStore";
 
 export default function App() {
-  const loadCart = useCartStore((state) => state.loadCart);
+  const token = useAuthStore((state) => state.token);
   const fetchProfile = useAuthStore((state) => state.fetchProfile);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const loadCart = useCartStore((state) => state.loadCart);
 
-    if (token) {
-      fetchProfile();
-      loadCart();
-    }
-  }, [fetchProfile, loadCart]);
+  useEffect(() => {
+    const initializeApp = async () => {
+      if (!token) return;
+
+      try {
+        await fetchProfile();
+        await loadCart();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    initializeApp();
+  }, [token, fetchProfile, loadCart]);
 
   return (
     <Routes>
-      {/* Layout Utama */}
+      {/* ================= PUBLIC ================= */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/success" element={<Success />} />
+      </Route>
+
+      {/* ================= USER (LOGIN REQUIRED) ================= */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/success" element={<Success />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<MyOrders />} />
       </Route>
 
-      {/* Super Admin */}
-      <Route element={<SuperAdminLayout />}>
-        <Route
-          path="/superadmin"
-          element={
-            <SuperAdminRoute>
-              <SuperAdmin />
-            </SuperAdminRoute>
-          }
-        />
+      {/* ================= ADMIN / SUPERADMIN ================= */}
+      <Route
+        element={
+          <RoleRoute roles={["admin", "superadmin"]}>
+            <SuperAdminLayout />
+          </RoleRoute>
+        }
+      >
         <Route path="/admin/addproduct" element={<AddProduct />} />
       </Route>
 
-      {/* Auth */}
+      {/* ================= SUPERADMIN ONLY ================= */}
+      <Route
+        element={
+          <RoleRoute role="superadmin">
+            <SuperAdminLayout />
+          </RoleRoute>
+        }
+      >
+        <Route path="/superadmin" element={<SuperAdmin />} />
+      </Route>
+
+      {/* ================= AUTH ================= */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

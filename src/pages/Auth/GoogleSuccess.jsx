@@ -6,10 +6,10 @@ export default function GoogleSuccess() {
   const navigate = useNavigate();
 
   const setToken = useAuthStore((state) => state.setToken);
-  const fetchProfile = useAuthStore((state) => state.fetchProfile);
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
-    const loginGoogle = async () => {
+    const loginGoogle = () => {
       try {
         // Ambil token dari URL
         const params = new URLSearchParams(window.location.search);
@@ -23,23 +23,19 @@ export default function GoogleSuccess() {
         // Simpan token ke Zustand + localStorage
         setToken(token);
 
-        // Ambil profile user dari backend
-        await fetchProfile();
-
-        // Redirect ke Home
+        // App.jsx akan otomatis mengambil profile dan cart
         navigate("/", { replace: true });
-
       } catch (error) {
         console.error("Google Login Error:", error);
 
-        useAuthStore.getState().logout();
+        logout();
 
         navigate("/login", { replace: true });
       }
     };
 
     loginGoogle();
-  }, [navigate, setToken, fetchProfile]);
+  }, [navigate, setToken, logout]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

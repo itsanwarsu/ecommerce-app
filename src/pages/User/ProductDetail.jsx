@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import useRecentStore from "../../store/recentStore";
 import useWishlistStore from "../../store/wishlistStore";
+import useAuthStore from "../../store/authStore";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 
 import "swiper/css";
@@ -17,6 +18,8 @@ export default function ProductDetail() {
   // Safely extract context
   const context = useOutletContext() || {};
   const setCurrentProduct = context.setCurrentProduct;
+
+  const user = useAuthStore((state) => state.user);
 
   const addRecentProduct = useRecentStore((state) => state.addRecentProduct);
 
@@ -53,23 +56,10 @@ export default function ProductDetail() {
           setCurrentProduct(productData);
         }
 
-        let userId = "guest";
-        const currentUserRaw = localStorage.getItem("currentUser");
-
-        if (currentUserRaw) {
-          try {
-            const currentUser = JSON.parse(currentUserRaw);
-            userId =
-              currentUser.id ||
-              currentUser._id ||
-              currentUser.username ||
-              "guest";
-          } catch {
-            userId = "guest";
-          }
-        }
-
+        // Simpan ke recent berdasarkan user yang sedang login
+        const userId = user?._id || user?.id || "guest";
         addRecentProduct(userId, productData);
+
       } catch (err) {
         console.error("Gagal mengambil detail produk:", err);
         setProduct(null);
@@ -85,7 +75,7 @@ export default function ProductDetail() {
         setCurrentProduct(null);
       }
     };
-  }, [id, setCurrentProduct, addRecentProduct]);
+  }, [id, user, setCurrentProduct, addRecentProduct]);
 
   if (loading) {
     return (
@@ -162,7 +152,7 @@ export default function ProductDetail() {
 
         <button
           onClick={handleWishlist}
-          className="mr-2 w-9 h-9 rounded-full dark:bg-gray-900 bg-white  shadow flex items-center justify-center hover:scale-110 transition"
+          className="mr-2 w-9 h-9 rounded-full dark:bg-gray-900 bg-white shadow flex items-center justify-center hover:scale-110 transition"
         >
           {isWishlisted ? (
             <HiHeart className="text-red-500 text-3xl" />
@@ -173,7 +163,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Nama Produk */}
-      <h1 className="text-2xl font-bold mt-1 ml-2 text-gray-900">
+      <h1 className="text-2xl font-bold mt-1 ml-2 text-gray-900 dark:text-white">
         {product.name}
       </h1>
 

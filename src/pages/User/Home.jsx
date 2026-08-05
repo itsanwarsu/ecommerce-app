@@ -27,7 +27,13 @@ export default function Home() {
     "guest";
 
   const recentByUsers = useRecentStore((state) => state.recentByUsers);
-  const userRecentProducts = recentByUsers?.[userId] || [];
+  const syncRecentProducts = useRecentStore(
+    (state) => state.syncRecentProducts
+  );
+
+  const userRecentProducts = useMemo(() => {
+    return recentByUsers[userId] || [];
+  }, [recentByUsers, userId]);
 
   const isSearching = search.trim() !== "";
 
@@ -35,6 +41,8 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+
         const res = await api.get("/products");
 
         const data = Array.isArray(res.data)
@@ -43,10 +51,8 @@ export default function Home() {
 
         setProducts(data);
 
-        useRecentStore
-          .getState()
-          .syncRecentProducts(user?._id, data);
-
+        // Sinkronkan recent sesuai user yang sedang aktif
+        syncRecentProducts(userId, data);
       } catch (err) {
         console.error("Gagal mengambil produk:", err);
         setProducts([]);
@@ -56,7 +62,7 @@ export default function Home() {
     };
 
     fetchProducts();
-  }, [user]);
+  }, [userId, syncRecentProducts]);
 
   // Filter produk
   const filteredProducts = useMemo(() => {
@@ -70,8 +76,8 @@ export default function Home() {
       const matchesCategory =
         !activeCategory ||
         activeCategory === "All" ||
-        (product.category || "").toLowerCase() ===
-          activeCategory.toLowerCase();
+        (product.category || "")
+          .toLowerCase() === activeCategory.toLowerCase();
 
       return matchesSearch && matchesCategory;
     });

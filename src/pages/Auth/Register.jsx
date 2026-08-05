@@ -27,7 +27,7 @@ const handleRegister = async (e) => {
   confirmButtonColor: "#16a34a", // hijau
 });
 
-return
+return;
   }
 
 setLoading(true);
