@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import socket from "../api/socket";
+import useAuthStore from "./authStore";
 
 import {
   deleteConversationApi,
@@ -72,12 +73,12 @@ const useChatStore = create((set, get) => ({
   },
 
   // Helper untuk membuka / membuat ruang chat tanpa auto-send pesan
-  startOrSelectConversation: async ({ receiverId }) => {
+  startOrSelectConversation: async ({ receiverId, productId }) => {
     const { selectConversation } = get();
 
     try {
-      // 1. Dapatkan atau buat room percakapan berdasarkan member
-      const conversation = await createConversation({ receiverId });
+      // 1. Dapatkan atau buat room percakapan berdasarkan member (+ konteks produk)
+      const conversation = await createConversation({ receiverId, productId });
 
       set((state) => {
         const filteredConversations = state.conversations.filter(
@@ -161,7 +162,7 @@ const useChatStore = create((set, get) => ({
         messages: [...state.messages, message],
       }));
 
-      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+      const currentUser = useAuthStore.getState().user;
       const receiver = selectedConversation.members.find((member) => {
         const memberId = typeof member === "object" ? member._id || member.id : member;
         return String(memberId) !== String(currentUser?._id || currentUser?.id);
@@ -240,4 +241,3 @@ const useChatStore = create((set, get) => ({
 }));
 
 export default useChatStore;
-

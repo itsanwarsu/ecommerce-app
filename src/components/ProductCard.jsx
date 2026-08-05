@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import useAuthStore from "../store/authStore";
 
-const ProductCard = ({ product, layout = "grid" }) => {
-  // Defensive check jika props product belum dimuat
-  if (!product) return null;
-
+const ProductCard = ({ product, layout = "grid", onDeleted }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const user = useAuthStore((state) => state.user);
 
-  // Ambil user yang login
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  // Defensive check jika props product belum dimuat
+  if (!product) return null;
 
   const isAdmin =
     user &&
@@ -42,11 +41,16 @@ const ProductCard = ({ product, layout = "grid" }) => {
 
     try {
       await api.delete(`/products/${productId}`);
-1
+
       alert("Produk berhasil dihapus.");
 
-      // Refresh halaman agar data terbaru tampil
-      window.location.reload();
+      // Kalau parent kasih callback, biar parent yang update list (tanpa reload)
+      // Kalau tidak, fallback ke reload biar tetap jalan
+      if (onDeleted) {
+        onDeleted(productId);
+      } else {
+        window.location.reload();
+      }
     } catch (err) {
       console.error(err);
       alert(

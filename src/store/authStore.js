@@ -12,8 +12,6 @@ const useAuthStore = create(
 
       // Simpan token
       setToken: (token) => {
-        localStorage.setItem("token", token);
-
         set({
           token,
           isAuthenticated: true,
@@ -29,21 +27,25 @@ const useAuthStore = create(
 
           set({
             user: res.data.user,
-            token: localStorage.getItem("token"),
             isAuthenticated: true,
             loading: false,
           });
 
           return res.data.user;
         } catch (err) {
-          localStorage.removeItem("token");
+          console.error("fetchProfile failed:", err);
 
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            loading: false,
-          });
+          // hanya logout paksa kalau token memang invalid/expired
+          if (err.response?.status === 401) {
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              loading: false,
+            });
+          } else {
+            set({ loading: false });
+          }
 
           return null;
         }
@@ -51,8 +53,6 @@ const useAuthStore = create(
 
       // Logout
       logout: () => {
-        localStorage.removeItem("token");
-
         set({
           user: null,
           token: null,
@@ -63,7 +63,6 @@ const useAuthStore = create(
     }),
     {
       name: "auth-storage",
-
       partialize: (state) => ({
         user: state.user,
         token: state.token,

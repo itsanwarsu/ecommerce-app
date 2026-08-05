@@ -14,8 +14,10 @@ const Chat = () => {
   const selectedConversation = useChatStore((state) => state.selectedConversation);
   const startOrSelectConversation = useChatStore((state) => state.startOrSelectConversation);
 
-  // Ref untuk memastikan inisialisasi chat HANYA BERJALAN 1 KALI
-  const hasInitialized = useRef(false);
+  // Simpan kombinasi productId+sellerId terakhir yang sudah di-init,
+  // supaya bisa init ulang kalau user chat produk/seller lain,
+  // tapi tetap anti double-run untuk kombinasi yang sama (misal StrictMode)
+  const lastInitKey = useRef(null);
 
   // Load semua daftar percakapan saat pertama masuk
   useEffect(() => {
@@ -25,10 +27,14 @@ const Chat = () => {
   // Handle jika masuk dari tombol 'Chat Penjual' di detail produk
   useEffect(() => {
     const initChat = async () => {
-      // Mencegah eksekusi ganda atau jika data tidak ada
-      if (!productId || !sellerId || hasInitialized.current) return;
+      if (!productId || !sellerId) return;
 
-      hasInitialized.current = true; // Tandai bahwa inisialisasi sudah dilakukan
+      const key = `${productId}-${sellerId}`;
+
+      // Sudah pernah di-init untuk kombinasi produk+seller ini, skip
+      if (lastInitKey.current === key) return;
+
+      lastInitKey.current = key;
 
       try {
         await startOrSelectConversation({
@@ -72,4 +78,3 @@ const Chat = () => {
 };
 
 export default Chat;
-

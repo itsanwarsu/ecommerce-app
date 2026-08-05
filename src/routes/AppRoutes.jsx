@@ -8,10 +8,10 @@ import AuthRoutes from "./AuthRoutes";
 export default function AppRoutes() {
   return (
     <Routes>
-      <PublicRoutes />
-      <ProtectedRoutes />
-      <AdminRoutes />
-      <AuthRoutes />
+      {PublicRoutes()}
+      {ProtectedRoutes()}
+      {AdminRoutes()}
+      {AuthRoutes()}
     </Routes>
   );
 }

@@ -13,6 +13,7 @@ import api from "../../api/axios";
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const search = useSearchStore((state) => state.search);
   const activeCategory = useCategoryStore((state) => state.activeCategory);
@@ -42,6 +43,7 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
+        setError(null);
 
         const res = await api.get("/products");
 
@@ -56,6 +58,7 @@ export default function Home() {
       } catch (err) {
         console.error("Gagal mengambil produk:", err);
         setProducts([]);
+        setError("Gagal memuat produk. Coba refresh halaman.");
       } finally {
         setLoading(false);
       }
@@ -82,6 +85,13 @@ export default function Home() {
       return matchesSearch && matchesCategory;
     });
   }, [products, search, activeCategory]);
+
+  // Hapus produk dari state lokal tanpa reload halaman
+  const handleProductDeleted = (deletedId) => {
+    setProducts((prev) =>
+      prev.filter((p) => (p._id || p.id) !== deletedId)
+    );
+  };
 
   if (loading) {
     return (
@@ -111,7 +121,10 @@ export default function Home() {
                     key={`recent-${product._id || product.id}`}
                     className="min-w-[170px] max-w-[170px] flex-shrink-0 snap-start"
                   >
-                    <ProductCard product={product} />
+                    <ProductCard
+                      product={product}
+                      onDeleted={handleProductDeleted}
+                    />
                   </div>
                 ))}
               </div>
@@ -131,12 +144,19 @@ export default function Home() {
           <CategoryFilter />
         </div>
 
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3">
+            {error}
+          </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <ProductCard
                 key={product._id || product.id}
                 product={product}
+                onDeleted={handleProductDeleted}
               />
             ))
           ) : (
