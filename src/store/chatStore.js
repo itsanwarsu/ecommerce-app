@@ -23,16 +23,18 @@ const useChatStore = create((set, get) => ({
   // =====================
   // Conversations
   // =====================
-  fetchConversations: async () => {
-    try {
-      const data = await getConversations();
-      set({ conversations: data });
-    } catch (error) {
-      console.error("Fetch conversations error:", error);
-    }
-  },
-
-  selectConversation: async (conversation) => {
+fetchConversations: async () => {
+  try {
+    const data = await getConversations();
+    const initialUnread = {};
+    data.forEach((c) => {
+      if (c.unreadCount) initialUnread[c._id] = c.unreadCount;
+    });
+    set({ conversations: data, unreadMessages: initialUnread });
+  } catch (error) {
+    console.error("Fetch conversations error:", error);
+  }
+},
     // Handling jika conversation null (tombol back ditekan)
     if (!conversation) {
       set({
