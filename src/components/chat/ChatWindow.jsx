@@ -4,6 +4,7 @@ import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import MessageBubble from "./MessageBubble";
 import useChatStore from "../../store/chatStore";
+import useAuthStore from "../../store/authStore";
 
 const ChatWindow = () => {
   const location = useLocation();
@@ -17,10 +18,8 @@ const ChatWindow = () => {
     (state) => state.selectedConversation
   );
 
-  // Ambil user ID dengan fallback yang aman (support _id & id)
-  const currentUserData = JSON.parse(
-    localStorage.getItem("currentUser") || "{}"
-  );
+  // Ambil user login dari authStore, bukan localStorage manual
+  const currentUserData = useAuthStore((state) => state.user);
   const currentUserId = currentUserData?._id || currentUserData?.id;
 
   // Auto Scroll ke pesan paling bawah setiap kali messages bertambah
@@ -34,10 +33,10 @@ const ChatWindow = () => {
 
   if (!selectedConversation) {
     return (
-      <div className="hidden md:flex flex-1 items-center justify-center text-gray-400 bg-white">
+      <div className="hidden md:flex flex-1 items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900">
         <div className="text-center">
           <svg
-            className="w-16 h-16 mx-auto mb-3 text-gray-300"
+            className="w-16 h-16 mx-auto mb-3 text-gray-300 dark:text-gray-700"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -56,7 +55,7 @@ const ChatWindow = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white h-full overflow-hidden">
+    <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 h-full overflow-hidden">
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -69,7 +68,7 @@ const ChatWindow = () => {
             />
           ))
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+          <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-sm">
             Belum ada pesan. Mulai percakapan sekarang.
           </div>
         )}
@@ -84,4 +83,3 @@ const ChatWindow = () => {
 };
 
 export default ChatWindow;
-

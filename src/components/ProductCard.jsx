@@ -69,7 +69,7 @@ const ProductCard = ({ product, layout = "grid", onDeleted }) => {
             className={
               layout === "horizontal"
                 ? "relative w-32 h-32 flex-shrink-0 flex items-center justify-center p-2 dark:bg-gray-800 bg-gray-50"
-                : "relative w-full h-40 flex items-center justify-center p-2 bg-gray-50 dark:bg-gray-800"
+                : "relative w-full h-32 flex items-center justify-center p-2 bg-gray-50 dark:bg-gray-800"
             }
           >
             <img

@@ -1,4 +1,5 @@
 import useChatStore from "../../store/chatStore";
+import useAuthStore from "../../store/authStore";
 
 const ChatHeader = () => {
   const conversation = useChatStore(
@@ -13,16 +14,15 @@ const ChatHeader = () => {
     (state) => state.onlineUsers
   );
 
-  const currentUser = JSON.parse(
-    localStorage.getItem("currentUser") || "{}"
-  );
-
+  // Ambil user login dari authStore (Zustand), bukan localStorage manual,
+  // supaya selalu sinkron dan reactive terhadap login/logout.
+  const currentUser = useAuthStore((state) => state.user);
   const currentUserId = currentUser?._id || currentUser?.id;
 
   if (!conversation) {
     return (
-      <div className="h-16 border-b flex items-center px-5 bg-white">
-        <span className="text-gray-500">
+      <div className="h-16 border-b dark:border-gray-700 flex items-center px-5 bg-white dark:bg-gray-800">
+        <span className="text-gray-500 dark:text-gray-400">
           Pilih percakapan
         </span>
       </div>
@@ -43,12 +43,12 @@ const ChatHeader = () => {
     : false;
 
   return (
-    <div className="h-16 border-b bg-white flex items-center justify-between px-4 md:px-5">
+    <div className="h-16 border-b dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-between px-4 md:px-5">
       <div className="flex items-center gap-3">
         {/* Tombol Kembali (Hanya tampil di Layar Mobile: md:hidden) */}
         <button
           onClick={() => selectConversation(null)}
-          className="md:hidden p-1.5 -ml-1 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex items-center justify-center"
+          className="md:hidden p-1.5 -ml-1 dark:text-white text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center justify-center"
           title="Kembali ke daftar chat"
         >
           <svg
@@ -67,13 +67,13 @@ const ChatHeader = () => {
         </button>
 
         <div>
-          <h2 className="font-semibold text-base md:text-lg leading-tight">
+          <h2 className="font-semibold text-base md:text-lg leading-tight dark:text-white">
             {otherUser?.name || otherUser?.username || "Pengguna"}
           </h2>
 
           <p
             className={`text-xs md:text-sm font-medium ${
-              online ? "text-green-600" : "text-gray-400"
+              online ? "text-green-600 dark:text-green-400" : "text-gray-400"
             }`}
           >
             {online ? "🟢 Online" : "⚪ Offline"}
@@ -85,4 +85,3 @@ const ChatHeader = () => {
 };
 
 export default ChatHeader;
-

@@ -79,10 +79,10 @@ const handleGoogleLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-8 rounded-xl shadow-lg w-[350px]"
+        className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-[350px]"
       >
         <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
           Login
@@ -94,8 +94,8 @@ const handleGoogleLogin = () => {
   disabled={googleLoading}
   className={`w-full mb-4 flex items-center justify-center gap-3 rounded-lg py-3 border transition-all duration-300 ${
     googleLoading
-      ? "bg-gray-100 border-gray-300 cursor-not-allowed scale-95"
-      : "bg-white border-gray-300 hover:bg-gray-50 active:scale-95 hover:shadow-md"
+      ? "bg-gray-100 dark:bg-gray-700 dark:text-white border-gray-300 cursor-not-allowed scale-95"
+      : "bg-white dark:bg-gray-700 dark:text-white border-gray-300 hover:bg-gray-50 active:scale-95 hover:shadow-md"
   }`}
 >
   {googleLoading ? (
@@ -131,25 +131,25 @@ const handleGoogleLogin = () => {
   )}
 </button>
 
-        <div className="relative mb-4">
-          <HiOutlineEnvelope className="absolute left-3 top-3 text-gray-400 text-xl" />
+        <div className="relative mb-4 ">
+          <HiOutlineEnvelope className="absolute left-3 top-3 text-gray-400 dark:text-white text-xl" />
 
           <input
             type="email"
             placeholder="Enter Email"
-            className="w-full border rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-green-500 outline-none"
+            className="w-full dark:bg-gray-700 dark:text-white border rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-green-500 outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
         <div className="relative mb-6">
-          <HiOutlineLockClosed className="absolute left-3 top-3 text-gray-400 text-xl" />
+          <HiOutlineLockClosed className="absolute dark:text-white left-3 top-3 text-gray-400 text-xl" />
 
           <input
             type="password"
             placeholder="Enter Password"
-            className="w-full border rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-green-500 outline-none"
+            className="w-full dark:bg-gray-700 dark:text-white border rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-green-500 outline-none"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -193,7 +193,7 @@ const handleGoogleLogin = () => {
           )}
         </button>
 
-        <p className="text-center mt-5">
+        <p className="text-center mt-5 dark:text-white">
           Don't Have An Account Yet?
           <Link
             to="/register"

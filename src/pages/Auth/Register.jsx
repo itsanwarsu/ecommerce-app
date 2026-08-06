@@ -63,11 +63,11 @@ Swal.fire({
 };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
 
       <form
         onSubmit={handleRegister}
-        className="bg-white w-[360px] p-6 rounded-xl shadow-lg"
+        className="bg-white dark:bg-gray-800 w-[360px] p-6 rounded-xl shadow-lg"
       >
 
         <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
@@ -76,12 +76,12 @@ Swal.fire({
 
         {/* Nama */}
         <div className="relative mb-4">
-          <HiOutlineUser className="absolute left-3 top-3 text-xl text-gray-400" />
+          <HiOutlineUser className="absolute dark:text-white left-3 top-3 text-xl text-gray-400" />
 
           <input
             type="text"
             placeholder="Full Name"
-            className="w-full border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full dark:bg-gray-700 dark:text-white border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -89,12 +89,12 @@ Swal.fire({
 
         {/* Email */}
         <div className="relative mb-4">
-          <HiOutlineEnvelope className="absolute left-3 top-3 text-xl text-gray-400" />
+          <HiOutlineEnvelope className="absolute left-3 top-3 dark:text-white text-xl text-gray-400" />
 
           <input
             type="email"
             placeholder="Email"
-            className="w-full border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full dark:bg-gray-700 dark:text-white border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -102,12 +102,12 @@ Swal.fire({
 
         {/* Password */}
         <div className="relative mb-6">
-          <HiOutlineLockClosed className="absolute left-3 top-3 text-xl text-gray-400" />
+          <HiOutlineLockClosed className="absolute dark:text-white left-3 top-3 text-xl text-gray-400" />
 
           <input
             type="password"
             placeholder="Password"
-            className="w-full border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full dark:bg-gray-700 dark:text-white border rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-green-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -150,7 +150,7 @@ Swal.fire({
     "Register"
   )}
 </button>
-        <p className="text-center mt-5 text-sm">
+        <p className="text-center mt-5 text-sm dark:text-white">
           Already Have Account?
           <Link
             to="/login"

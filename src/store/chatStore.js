@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import socket from "../api/socket";
+import api from "../api/axios";
 import useAuthStore from "./authStore";
 
 import {
@@ -66,9 +67,23 @@ const useChatStore = create((set, get) => ({
           unreadMessages: updatedUnread,
         };
       });
+
+      // Beri tahu backend supaya pesan dari lawan bicara ditandai sudah dibaca,
+      // dan lawan bicara dapat notifikasi realtime (centang berubah jadi biru).
+      get().markAsRead(conversationId);
     } catch (error) {
       console.error("Fetch messages error:", error);
       set({ messages: [] });
+    }
+  },
+
+  // Tandai pesan di percakapan ini sebagai sudah dibaca
+  markAsRead: async (conversationId) => {
+    if (!conversationId) return;
+    try {
+      await api.patch(`/messages/read/${conversationId}`);
+    } catch (error) {
+      console.error("Mark as read error:", error);
     }
   },
 
@@ -111,10 +126,14 @@ const useChatStore = create((set, get) => ({
 
         const isCurrentSelected = state.selectedConversation?._id === conversationId;
 
+        const updatedUnread = { ...state.unreadMessages };
+        delete updatedUnread[conversationId];
+
         return {
           conversations: updatedConversations,
           selectedConversation: isCurrentSelected ? null : state.selectedConversation,
           messages: isCurrentSelected ? [] : state.messages,
+          unreadMessages: updatedUnread,
         };
       });
     } catch (error) {
@@ -139,7 +158,6 @@ const useChatStore = create((set, get) => ({
       const { selectedConversation } = get();
       if (!selectedConversation) return;
 
-      // Parsing payload (bisa berupa string biasa atau objek { text, productId })
       let text = "";
       let productId = null;
 
@@ -161,6 +179,24 @@ const useChatStore = create((set, get) => ({
       set((state) => ({
         messages: [...state.messages, message],
       }));
+
+      // Update preview lastMessage + naikkan percakapan ini ke atas list
+      set((state) => {
+        const idx = state.conversations.findIndex(
+          (c) => c._id === selectedConversation._id
+        );
+        if (idx === -1) return {};
+
+        const updatedConversation = {
+          ...state.conversations[idx],
+          lastMessage: message,
+        };
+        const rest = state.conversations.filter(
+          (c) => c._id !== selectedConversation._id
+        );
+
+        return { conversations: [updatedConversation, ...rest] };
+      });
 
       const currentUser = useAuthStore.getState().user;
       const receiver = selectedConversation.members.find((member) => {
@@ -194,6 +230,7 @@ const useChatStore = create((set, get) => ({
     socket.off("disconnect");
     socket.off("onlineUsers");
     socket.off("newMessage");
+    socket.off("messagesRead");
 
     socket.on("connect", () => {
       set({ isConnected: true });
@@ -222,6 +259,9 @@ const useChatStore = create((set, get) => ({
         set((state) => ({
           messages: [...state.messages, message],
         }));
+
+        // Percakapan ini sedang dibuka -> langsung tandai dibaca juga
+        get().markAsRead(conversationId);
       } else {
         set((state) => ({
           unreadMessages: {
@@ -230,6 +270,40 @@ const useChatStore = create((set, get) => ({
           },
         }));
       }
+
+      set((state) => {
+        const idx = state.conversations.findIndex((c) => c._id === conversationId);
+        if (idx === -1) return {};
+
+        const updatedConversation = {
+          ...state.conversations[idx],
+          lastMessage: message,
+        };
+        const rest = state.conversations.filter((c) => c._id !== conversationId);
+
+        return { conversations: [updatedConversation, ...rest] };
+      });
+    });
+
+    // Lawan bicara baru saja membaca pesan kita -> update centang jadi biru
+    socket.on("messagesRead", ({ conversationId, readerId }) => {
+      set((state) => {
+        const { selectedConversation } = state;
+        if (!selectedConversation || selectedConversation._id !== conversationId) {
+          return {};
+        }
+
+        const updatedMessages = state.messages.map((msg) => {
+          const alreadyRead = (msg.readBy || []).some(
+            (id) => String(id) === String(readerId)
+          );
+          if (alreadyRead) return msg;
+
+          return { ...msg, readBy: [...(msg.readBy || []), readerId] };
+        });
+
+        return { messages: updatedMessages };
+      });
     });
   },
 
@@ -241,3 +315,4 @@ const useChatStore = create((set, get) => ({
 }));
 
 export default useChatStore;
+

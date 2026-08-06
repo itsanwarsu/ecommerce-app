@@ -17,7 +17,7 @@ export default function CategoryFilter() {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border ${
               isActive
                 ? "bg-blue-500 dark:bg-gray-800 text-white border-blue-500 shadow-sm"
-                : "bg-[#f4f4f4] dark:bg-gray-800 text-gray-700 border-gray-200"
+                : "bg-[#f4f4f4] dark:bg-gray-800 text-gray-700 dark:text-white border-gray-200"
             }`}
           >
             {category}
