@@ -35,7 +35,8 @@ fetchConversations: async () => {
     console.error("Fetch conversations error:", error);
   }
 },
-    // Handling jika conversation null (tombol back ditekan)
+selectConversation: async (conversation) => {
+     // Handling jika conversation null (tombol back ditekan)
     if (!conversation) {
       set({
         selectedConversation: null,
