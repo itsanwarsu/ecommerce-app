@@ -116,7 +116,7 @@ const ChatInput = ({ initialProductId }) => {
       <form onSubmit={handleSend} className="p-3 flex gap-2">
         <input
           type="text"
-          className="flex-1 border dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-60"
+          className="flex-1 shrink-0 border dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-60"
           placeholder="Tulis pesan..."
           value={text}
           onChange={(e) => setText(e.target.value)}

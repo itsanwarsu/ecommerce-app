@@ -1,18 +1,13 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import MessageBubble from "./MessageBubble";
 import useChatStore from "../../store/chatStore";
 import useAuthStore from "../../store/authStore";
 
-const ChatWindow = () => {
-  const location = useLocation();
+const ChatWindow = ({ initialProductId }) => {
   const messagesEndRef = useRef(null);
-
-  // Tangkap productId dari navigasi saat klik 'Chat Penjual'
-  const initialProductId = location.state?.productId;
-
+  
   const messages = useChatStore((state) => state.messages);
   const selectedConversation = useChatStore(
     (state) => state.selectedConversation

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import ChatSidebar from "../../components/chat/ChatSidebar";
@@ -9,6 +9,9 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { productId, sellerId } = location.state || {};
+
+ // Simpan productId di local state, supaya tidak hilang saat location.state dibersihkan
+  const [activeProductId, setActiveProductId] = useState(productId);
 
   const fetchConversations = useChatStore((state) => state.fetchConversations);
   const selectedConversation = useChatStore((state) => state.selectedConversation);
@@ -35,7 +38,7 @@ const Chat = () => {
       if (!productId || !sellerId) return;
 
       const key = `${productId}-${sellerId}`;
-
+     setActiveProductId(productId);
       // Sudah pernah di-init untuk kombinasi produk+seller ini, skip
       if (lastInitKey.current === key) return;
 
@@ -65,7 +68,7 @@ const Chat = () => {
   }, [productId, sellerId, fetchConversations, startOrSelectConversation, navigate, location.pathname]);
 
   return (
-    <div className="h-screen dark:bg-gray-900 bg-gray-100 flex flex-col">
+    <div className="h-[100dvh] dark:bg-gray-900 bg-gray-100 flex flex-col">
       <div className="flex flex-1 overflow-hidden relative">
         {/*
           1. Sidebar (Daftar Chat)
@@ -90,7 +93,7 @@ const Chat = () => {
             selectedConversation ? "flex" : "hidden md:flex"
           } flex-col bg-white dark:bg-gray-900`}
         >
-          <ChatWindow />
+          <ChatWindow initialProductId={activeProductId} />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   HiOutlineBars3,
+  HiOutlineChatBubbleOvalLeft,
   HiOutlineXMark,
   HiOutlineHeart,
   HiOutlineCog6Tooth,
@@ -9,6 +10,7 @@ import {
 } from "react-icons/hi2";
 import ThemeToggle from "./ThemeToggle";
 import useAuthStore from "../store/authStore";
+import useChatStore from "../store/chatStore";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -16,6 +18,13 @@ export default function Sidebar() {
   const currentUser = useAuthStore((state) => state.user);
   const fetchProfile = useAuthStore((state) => state.fetchProfile);
   const token = useAuthStore((state) => state.token);
+
+  // Hitung langsung dari unreadMessages supaya reactive terhadap perubahan object
+  const unreadMessages = useChatStore((state) => state.unreadMessages);
+  const totalUnread = Object.values(unreadMessages).reduce(
+    (sum, count) => sum + count,
+    0
+  );
 
   // Ambil profile jika sudah login
   useEffect(() => {
@@ -38,9 +47,15 @@ export default function Sidebar() {
       {/* Tombol Hamburger */}
       <button
         onClick={() => setOpen(true)}
-        className="p-2 rounded-lg hover:bg-gray-100 transition"
+        className="relative p-2 rounded-lg hover:bg-gray-100 transition"
       >
         <HiOutlineBars3 className="text-3xl dark:text-white text-gray-700" />
+
+        {totalUnread > 0 && (
+          <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[10px] leading-none font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
+            {totalUnread > 9 ? "9+" : totalUnread}
+          </span>
+        )}
       </button>
 
       {/* Overlay */}
@@ -100,6 +115,22 @@ export default function Sidebar() {
 
         {/* Menu */}
         <nav className="p-3 space-y-1">
+          <Link
+            to="/chat"
+            onClick={() => setOpen(false)}
+            className="relative flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            <HiOutlineChatBubbleOvalLeft className="text-2xl dark:text-white text-gray-600" />
+
+            {totalUnread > 0 && (
+              <span className="absolute top-2 left-7 bg-red-500 text-white text-[10px] leading-none font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
+                {totalUnread > 9 ? "9+" : totalUnread}
+              </span>
+            )}
+
+            <span className="font-medium">Chat</span>
+          </Link>
+
           <Link
             to="/wishlist"
             onClick={() => setOpen(false)}
