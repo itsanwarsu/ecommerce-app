@@ -26,7 +26,7 @@ export default function Checkout() {
       quantity: Number(item.quantity || 1),
       image:
         product.image?.url ||
-        product.image ||
+        product.imageUrl ||
         (Array.isArray(product.images)
           ? product.images[0]
           : "https://via.placeholder.com/100"),

@@ -100,7 +100,7 @@ export default function ProductDetail() {
       ? product.images.map((img) => img.url || img)
       : [
           product.image?.url ||
-            product.image ||
+            product.image ||product.imageUrl ||
             "https://via.placeholder.com/400",
         ];
 
