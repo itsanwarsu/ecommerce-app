@@ -22,7 +22,7 @@ const ProductCard = ({ product, layout = "grid", onDeleted }) => {
   const imageUrl =
     (Array.isArray(product.images) && product.images.length > 0
       ? product.images[0]?.url || product.images[0]
-      : product.image?.url || product.image) ||
+      : product.image?.url || product.image) || product.imageUrl ||
     "https://via.placeholder.com/300x300?text=No+Image";
 
   // Class card berdasarkan layout
