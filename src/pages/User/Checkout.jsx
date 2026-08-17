@@ -19,18 +19,15 @@ export default function Checkout() {
         ? item.product
         : {};
 
-    return {
-      id: product._id || item._id,
-      name: product.name || "Produk",
-      price: Number(product.price || 0),
-      quantity: Number(item.quantity || 1),
-      image:
-        product.image?.url ||
-        product.imageUrl ||
-        (Array.isArray(product.images)
-          ? product.images[0]
-          : "https://via.placeholder.com/100"),
-    };
+return {
+  id: product.id || item.id,
+  name: product.name || "Produk",
+  price: Number(product.price || 0),
+  quantity: Number(item.quantity || 1),
+  image:
+    product.imageUrl ||
+    "https://via.placeholder.com/100",
+};
   };
 
   const total = useMemo(() => {

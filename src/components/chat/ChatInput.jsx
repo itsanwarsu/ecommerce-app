@@ -86,7 +86,12 @@ const ChatInput = ({ initialProductId }) => {
         <div className="p-2 px-3 bg-blue-50 dark:bg-blue-950/40 border-b dark:border-gray-700 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 overflow-hidden">
             <img
-              src={pendingProduct.image?.url || pendingProduct.image || "/placeholder.png"}
+src={
+  pendingProduct.imageUrl ||
+  pendingProduct.image?.url ||
+  pendingProduct.image ||
+  "/placeholder.png"
+}
               alt={pendingProduct.name}
               className="w-10 h-10 object-cover rounded-lg border dark:border-gray-600 bg-white flex-shrink-0"
             />

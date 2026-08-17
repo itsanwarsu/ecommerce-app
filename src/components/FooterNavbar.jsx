@@ -11,22 +11,40 @@ export default function FooterNavbar({ product }) {
   const isProductPage = location.pathname.startsWith("/product/");
 
   if (!isProductPage) return null;
+const handleChat = () => {
+  if (!product) {
+    console.warn("Produk belum tersedia.");
+    return;
+  }
 
-  const handleChat = () => {
-    const sellerId = product?.seller?._id || product?.seller;
+  const productId = product.id || product._id;
+  const sellerId =
+    product.sellerId ||
+    product.seller?.id ||
+    product.seller?._id ||
+    product.seller;
 
-    if (!product || !sellerId) {
-      console.warn("Data produk atau penjual belum siap.");
-      return;
-    }
-
-    navigate("/chat", {
-      state: {
-        productId: product._id,
-        sellerId,
-      },
+  if (!productId || !sellerId) {
+    console.warn("ID produk atau seller tidak ditemukan:", {
+      product,
+      productId,
+      sellerId,
     });
-  };
+    return;
+  }
+
+  console.log("Membuka chat dengan:", {
+    productId,
+    sellerId,
+  });
+
+  navigate("/chat", {
+    state: {
+      productId,
+      sellerId,
+    },
+  });
+};
 
   const handleAddToCart = () => {
     if (!product) return;

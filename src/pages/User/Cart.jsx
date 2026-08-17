@@ -22,31 +22,33 @@ export default function Cart() {
     });
   }, [loadCart]);
 
-  const getItemDetails = (item) => {
-    const product =
-      item.product && typeof item.product === "object"
-        ? item.product
-        : {};
+const getItemDetails = (item) => {
+  const product =
+    item.product && typeof item.product === "object"
+      ? item.product
+      : {};
 
-    const image =
-      product.image?.url ||
-      product.image?.secure_url ||
-      product.image ||
-      (Array.isArray(product.images)
-        ? product.images[0]?.url ||
-          product.images[0]?.secure_url ||
-          product.images[0]
-        : null) ||
-      "https://via.placeholder.com/300x300?text=No+Image";
+  const image =
+    product.image?.url ||
+    product.image?.secure_url ||
+    product.imageUrl ||
+    (Array.isArray(product.images)
+      ? product.images[0]?.url ||
+        product.images[0]?.secure_url ||
+        product.images[0]
+      : null) ||
+    "https://via.placeholder.com/300x300?text=No+Image";
 
-    return {
-      id: product._id || item._id,
-      name: product.name ?? "Produk Tanpa Nama",
-      price: Number(product.price ?? 0),
-      quantity: Number(item.quantity ?? 1),
-      image,
-    };
+  return {
+    cartItemId: item.id,
+    productId: product.id || item.productId,
+
+    name: product.name ?? "Produk Tanpa Nama",
+    price: Number(product.price ?? 0),
+    quantity: Number(item.quantity ?? 1),
+    image,
   };
+};
 
   const total = useMemo(() => {
     return cart.reduce((sum, rawItem) => {
@@ -88,12 +90,13 @@ export default function Cart() {
         ) : (
           <>
             <div className="space-y-4">
-              {cart.map((rawItem) => {
-                const item = getItemDetails(rawItem);
+{cart.map((rawItem) => {
+  const item = getItemDetails(rawItem);
 
-                return (
-                  <div
-                    key={item.id}
+  return (
+    <div
+      key={item.cartItemId}
+
                     className="bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-200 p-4 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-4">
@@ -120,7 +123,7 @@ export default function Cart() {
              disabled={updating}
              onClick={async () => {
                             try {
-                              await decreaseQty(item.id);
+                              await decreaseQty(item.productId);
                             } catch (err) {
                               console.error(err);
                             }
@@ -138,7 +141,7 @@ export default function Cart() {
                        disabled={updating}
                         onClick={async () => {
                             try {
-                              await increaseQty(item.id);
+                              await increaseQty(item.productId);
                             } catch (err) {
                               console.error(err);
                             }
@@ -152,7 +155,7 @@ export default function Cart() {
                       <button
                         onClick={async () => {
                           try {
-                            await removeFromCart(item.id);
+                            await removeFromCart(item.productId);
                           } catch (err) {
                             console.error(err);
                           }

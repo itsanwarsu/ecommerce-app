@@ -23,14 +23,17 @@ const useRecentStore = create(
         );
 
         // Simpan hanya data yang dibutuhkan
-        const cleanProduct = {
-          _id: productId,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          category: product.category,
-        };
-
+const cleanProduct = {
+  _id: productId,
+  name: product.name,
+  price: product.price,
+  imageUrl:
+    product.imageUrl ||
+    product.image?.url ||
+    product.image ||
+    "",
+  category: product.category,
+};
         // Masukkan ke urutan pertama, maksimal 4 produk
         const updated = [cleanProduct, ...filtered].slice(0, 4);
 
@@ -63,12 +66,16 @@ const useRecentStore = create(
             const latest = productMap.get(item._id || item.id);
 
             return {
-              _id: latest._id || latest.id,
-              name: latest.name,
-              price: latest.price,
-              image: latest.image,
-              category: latest.category,
-            };
+  _id: latest._id || latest.id,
+  name: latest.name,
+  price: latest.price,
+  imageUrl:
+    latest.imageUrl ||
+    latest.image?.url ||
+    latest.image ||
+    "",
+  category: latest.category,
+};
           });
 
         set((state) => ({
