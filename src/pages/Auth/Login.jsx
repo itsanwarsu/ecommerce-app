@@ -22,7 +22,7 @@ const handleGoogleLogin = () => {
 
   setTimeout(() => {
     window.location.href =
-      "https://http://backend-express-production-a93b.up.railway.app/api/auth/google";
+      "https://backend-express-production-a93b.up.railway.app/api/auth/google";
   }, 300);
 };
 
