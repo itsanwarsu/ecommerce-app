@@ -2,7 +2,7 @@ import axios from "axios";
 import useAuthStore from "../store/authStore";
 
 const api = axios.create({
-  baseURL: "https://backend-express-production-9a2e.up.railway.app/api",
+  baseURL: "https://http://backend-express-production-a93b.up.railway.app/api",
 });
 
 // Tambahkan token JWT ke setiap request
