@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import {
   HiShieldCheck,
   HiOutlineChatBubbleOvalLeft,
-  HiOutlineBell,
-  HiOutlineShoppingCart,
   HiOutlineUserCircle,
   HiOutlineShoppingBag,
   HiOutlineMapPin,
@@ -59,25 +57,6 @@ export default function Profile() {
           Account
         </h2>
 
-        <div className="flex items-center gap-4">
-          <Link to="/chat" className="relative">
-            <HiOutlineChatBubbleOvalLeft className="text-2xl dark:text-white" />
-
-            {totalUnread > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">
-                {totalUnread > 9 ? "9+" : totalUnread}
-              </span>
-            )}
-          </Link>
-
-          <Link to="/notifications">
-            <HiOutlineBell className="text-2xl dark:text-white" />
-          </Link>
-
-          <Link to="/cart">
-            <HiOutlineShoppingCart className="text-2xl dark:text-white" />
-          </Link>
-        </div>
       </div>
 
       {/* Profil */}

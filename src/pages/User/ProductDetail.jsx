@@ -104,22 +104,25 @@ export default function ProductDetail() {
             "https://via.placeholder.com/400",
         ];
 
-  const isWishlisted = wishlist.some(
-    (item) => item._id === product._id
-  );
+const isWishlisted = wishlist.some((item) => {
+  const wishlistProduct = item.product || item;
 
-  const handleWishlist = async () => {
-    try {
-      if (isWishlisted) {
-        await removeFromWishlist(product._id);
-      } else {
-        await addToWishlist(product._id);
-      }
-    } catch (err) {
-      console.error("Wishlist error:", err);
+  return String(wishlistProduct._id || wishlistProduct.id) ===
+    String(product._id || product.id);
+});
+
+const handleWishlist = async () => {
+  try {
+    if (isWishlisted) {
+      await removeFromWishlist(product.id);
+    } else {
+      await addToWishlist(product.id);
     }
-  };
-
+  } catch (err) {
+    console.error("Wishlist error:", err);
+    console.error("Response:", err.response?.data);
+  }
+};
   return (
     <div className="max-w-6xl mx-auto p-3 mt-16 pb-28">
       {/* Image Slider */}
