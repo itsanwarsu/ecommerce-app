@@ -149,7 +149,7 @@ const handleWishlist = async () => {
         <h2 className="text-xl font-bold text-blue-600 ml-2">
           Rp{" "}
           <span className="text-2xl">
-            {(product.price || 0).toLocaleString("id-ID")}
+            {Number(product.price || 0).toLocaleString("id-ID")}
           </span>
         </h2>
 

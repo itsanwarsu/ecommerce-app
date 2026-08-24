@@ -140,7 +140,7 @@ const ProductCard = ({ product, layout = "grid", onDeleted }) => {
 
             <div className="flex justify-between items-center mt-2">
               <p className="text-xs font-bold text-blue-600">
-                Rp {(product.price || 0).toLocaleString("id-ID")}
+                Rp {Number(product.price || 0).toLocaleString("id-ID")}
               </p>
 
               <div className="flex items-center gap-1">

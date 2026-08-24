@@ -7,25 +7,19 @@ const useOrderStore = create((set) => ({
   loading: false,
 
   // Ambil semua order
-  loadOrders: async () => {
-    set({ loading: true });
-
-    try {
-      const res = await api.get("/orders");
-
-      set({
-        orders: Array.isArray(res.data) ? res.data : [],
-      });
-
-      return { success: true };
-    } catch (err) {
-      console.error("Gagal memuat riwayat transaksi:", err);
-      set({ orders: [] });
-      throw err;
-    } finally {
-      set({ loading: false });
-    }
-  },
+loadOrders: async () => {
+  set({ loading: true, error: null });
+  try {
+    const res = await api.get("/orders");
+    set({ orders: Array.isArray(res.data) ? res.data : [] });
+    return { success: true };
+  } catch (err) {
+    console.error("Gagal memuat riwayat transaksi:", err);
+    set({ orders: [], error: "Gagal memuat pesanan. Coba lagi." });
+  } finally {
+    set({ loading: false });
+  }
+},
 
   // Ambil detail order
   loadOrder: async (orderId) => {

@@ -7,6 +7,7 @@ export default function MyOrders() {
   const {
     orders,
     loading,
+    error,
     loadOrders,
   } = useOrderStore();
 
@@ -18,11 +19,9 @@ export default function MyOrders() {
     (state) => state.setSearchTransaction
   );
 
-
   useEffect(() => {
     loadOrders();
   }, [loadOrders]);
-
 
   const filteredOrders = useMemo(() => {
     const query = searchTransaction.trim().toLowerCase();
@@ -30,12 +29,14 @@ export default function MyOrders() {
     if (!query) return orders;
 
     return orders.filter((order) => {
+      const matchId = String(order.id ?? "").toLowerCase().includes(query);
+
+      const matchStatus = order.status?.toLowerCase().includes(query);
 
       const matchName =
         order.customerName
           ?.toLowerCase()
           .includes(query);
-
 
       const matchProduct =
         order.items?.some((item) =>
@@ -44,12 +45,9 @@ export default function MyOrders() {
             .includes(query)
         );
 
-
-      return matchName || matchProduct;
+      return matchId || matchStatus || matchName || matchProduct;
     });
-
   }, [orders, searchTransaction]);
-
 
   if (loading) {
     return (
@@ -61,6 +59,26 @@ export default function MyOrders() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-black flex flex-col items-center justify-center p-6">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={() => loadOrders()}
+          className="
+            bg-blue-600
+            text-white
+            px-4
+            py-2
+            rounded-lg
+            font-semibold
+          "
+        >
+          Coba Lagi
+        </button>
+      </div>
+    );
+  }
 
   if (orders.length === 0) {
     return (
@@ -78,24 +96,19 @@ export default function MyOrders() {
     );
   }
 
-
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900  dark:text-white text-black p-5 pt-24">
-
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white text-black p-5 pt-24">
       <div className="max-w-4xl mx-auto">
-
         <div className="flex justify-between items-center mb-6">
-
-          <h1 className="text-3xl font-bold ">
+          <h1 className="text-3xl font-bold">
             Pesanan Saya
           </h1>
-
 
           <input
             type="text"
             placeholder="Cari transaksi..."
             value={searchTransaction}
-            onChange={(e)=>setSearchTransaction(e.target.value)}
+            onChange={(e) => setSearchTransaction(e.target.value)}
             className="
               border
               rounded-lg
@@ -108,23 +121,16 @@ export default function MyOrders() {
               dark:bg-gray-800
             "
           />
-
         </div>
 
-
-
         {filteredOrders.length === 0 ? (
-
           <p className="text-center dark:text-white text-gray-500 py-10">
             Transaksi tidak ditemukan.
           </p>
-
         ) : (
-
-          filteredOrders.map((order)=> (
-
+          filteredOrders.map((order) => (
             <div
-              key={order._id}
+              key={order.id}
               className="
                 bg-white
                 dark:bg-gray-800
@@ -134,89 +140,67 @@ export default function MyOrders() {
                 mb-6
               "
             >
-
-
               <div className="flex justify-between border-b pb-4 mb-4">
-
                 <div>
-
                   <h2 className="font-bold text-lg">
-                    Pesanan #{order._id.slice(-6)}
+                    Pesanan #{order.id ?? "-"}
                   </h2>
 
                   <p className="text-gray-500">
-                    {new Date(order.createdAt)
-                    .toLocaleDateString("id-ID")}
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString("id-ID")
+                      : "-"}
                   </p>
-
                 </div>
-
 
                 <span
                   className="
                     bg-gray-600
                     text-white
-                    py-2 px-3 
+                    py-2 px-3
                     h-10
                     rounded-md
                     text-sm
                     font-semibold
                   "
                 >
-                  {order.status}
+                  {order.status ?? "Tidak diketahui"}
                 </span>
-
-
               </div>
 
-
-
-
               <div className="mb-5">
-
                 <h3 className="font-semibold mb-2">
                   Penerima
                 </h3>
 
-
                 <p>
-                  Nama: {order.customerName}
+                  Nama: {order.customerName || "-"}
                 </p>
 
-
                 <p>
-                  Alamat: {order.address}
+                  Alamat: {order.address || "-"}
                 </p>
-
-
               </div>
-
-
-
 
               <h3 className="font-semibold mb-3">
                 Produk
               </h3>
 
-
-
               <div className="space-y-4">
-
-                {order.items.map((item,index)=>{
-
+                {order.items.map((item) => {
                   const product = item.product || {};
-
 
                   const image =
                     product.image?.url ||
-                    product.image ||
+                    product.imageUrl ||
                     "https://via.placeholder.com/100";
 
+                  const price = Number(item.price) || 0;
+                  const quantity = Number(item.quantity) || 0;
 
                   return (
-
                     <div
-                      key={index}
+                      key={item.id || `${product.id || product.name}-${quantity}`}
                       className="
                         flex
                         items-center
@@ -225,12 +209,10 @@ export default function MyOrders() {
                         pb-4
                       "
                     >
-
                       <div className="flex gap-4 items-center">
-
                         <img
                           src={image}
-                          alt={product.name}
+                          alt={product.name || "Produk"}
                           className="
                             w-20
                             h-20
@@ -239,70 +221,42 @@ export default function MyOrders() {
                           "
                         />
 
-
                         <div>
-
                           <h4 className="font-semibold">
-                            {product.name}
+                            {product.name || "Produk tidak diketahui"}
                           </h4>
 
-
                           <p className="text-gray-500">
-                            Qty: {item.quantity}
+                            Qty: {quantity}
                           </p>
 
-
                           <p className="text-gray-500">
-                            Rp {item.price.toLocaleString("id-ID")}
+                            Rp {price.toLocaleString("id-ID")}
                           </p>
-
-
                         </div>
-
                       </div>
 
-
-
                       <p className="font-bold text-blue-600">
-                        Rp {(item.price * item.quantity)
-                        .toLocaleString("id-ID")}
+                        Rp {(price * quantity).toLocaleString("id-ID")}
                       </p>
-
-
                     </div>
-
                   );
-
                 })}
-
               </div>
 
-
-
-
               <div className="flex justify-between mt-6 pt-4 border-t">
-
                 <span className="font-bold text-lg">
                   Total
                 </span>
 
-
                 <span className="font-bold text-2xl text-blue-600">
-                  Rp {order.total.toLocaleString("id-ID")}
+                  Rp {Number(order.total ?? 0).toLocaleString("id-ID")}
                 </span>
-
-
               </div>
-
-
             </div>
-
           ))
-
         )}
-
       </div>
-
     </div>
   );
 }
