@@ -10,6 +10,7 @@ import api from "../../api/axios";
 
 import LocalReviews from "../../components/LocalReviews";
 import FooterNavbar from "../../components/FooterNavbar";
+import Footer from "../../components/Footer";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -1081,6 +1082,8 @@ export default function ProductDetail() {
         </div>
 
       </main>
+
+<Footer />
 
       {/* =====================================================
           MOBILE FOOTER NAVBAR

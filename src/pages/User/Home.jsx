@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import LoginCard from "../../components/LoginCard";
 import ProductCard from "../../components/ProductCard";
 import CategoryFilter from "../../components/CategoryFilter";
+import Footer from "../../components/Footer";
 
 import useRecentStore from "../../store/recentStore";
 import useSearchStore from "../../store/searchStore";
@@ -174,6 +175,7 @@ export default function Home() {
           )}
         </div>
       </section>
+<Footer />
     </div>
   );
 }
